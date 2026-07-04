@@ -1,0 +1,5 @@
+model,brier_pre_kalibracije,brier_posle_kalibracije
+model_a_logreg,0.173,0.0687
+model_a_xgboost,0.1701,0.0703
+model_b_logreg,0.1833,0.0709
+model_b_xgboost,0.1749,0.0704

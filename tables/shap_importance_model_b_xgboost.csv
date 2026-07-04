@@ -1,0 +1,32 @@
+feature,mean_abs_shap
+shot_angle_deg,0.6742675
+open_goal_angle_ratio,0.29469103
+distance_to_goal,0.25550795
+goalkeeper_anomaly,0.18685529
+nearest_defender_to_shot_line,0.16835737
+pressure_score,0.15972073
+body_part_clean_Head,0.08057445
+n_defenders_in_cone,0.06919063
+technique_Normal,0.06836764
+minute,0.057647068
+game_state_trailing,0.03278
+under_pressure,0.02905707
+n_opponents_close,0.022342512
+game_state_level,0.017134968
+technique_Half Volley,0.013187764
+play_pattern_Regular Play,0.006739116
+n_teammates_in_cone,0.0050578215
+play_pattern_From Throw In,0.0048184833
+technique_Volley,0.00432315
+first_time,0.0034795557
+technique_Lob,0.0014142444
+shot_type_clean_Set Piece,0.0
+body_part_clean_Other,0.0
+play_pattern_Other,0.0
+play_pattern_From Kick Off,0.0
+play_pattern_From Keeper,0.0
+play_pattern_From Goal Kick,0.0
+play_pattern_From Counter,0.0
+play_pattern_From Free Kick,0.0
+technique_Overhead Kick,0.0
+technique_Diving Header,0.0

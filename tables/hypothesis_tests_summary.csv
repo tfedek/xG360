@@ -1,0 +1,5 @@
+hypothesis,test,chi2,dof,p_value,n,pct_cells_expected_lt_5,median_goal,median_miss,u_statistic,n_goals,n_misses
+H1: play_pattern povezan sa is_goal,Chi-square,14.996,8.0,0.05923138778691,3968.0,11.1,,,,,
+H2: Udaljenost od gola (gol vs. promašaj),Mann-Whitney U,,,4.2613887384766946e-48,,,11.74,18.839,362351.0,372.0,3596.0
+H3: Ugao šuta (gol vs. promašaj),Mann-Whitney U,,,5.5782220536440885e-52,,,33.816,19.438,987951.5,372.0,3596.0
+H4: stopa golova razlikuje se po turniru,Chi-square,8.336,2.0,0.015480645606842314,,,,,,,

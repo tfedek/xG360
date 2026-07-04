@@ -1,0 +1,250 @@
+[
+ {
+  "feature": "shot_angle_deg",
+  "mean_abs_shap_A": 0.6086,
+  "mean_abs_shap_B": 0.6743,
+  "rank_A": 1.0,
+  "rank_B": 1.0,
+  "rank_change": 0.0
+ },
+ {
+  "feature": "open_goal_angle_ratio",
+  "mean_abs_shap_A": 0.0,
+  "mean_abs_shap_B": 0.2947,
+  "rank_A": 25.0,
+  "rank_B": 2.0,
+  "rank_change": 23.0
+ },
+ {
+  "feature": "distance_to_goal",
+  "mean_abs_shap_A": 0.4502,
+  "mean_abs_shap_B": 0.2555,
+  "rank_A": 2.0,
+  "rank_B": 3.0,
+  "rank_change": -1.0
+ },
+ {
+  "feature": "goalkeeper_anomaly",
+  "mean_abs_shap_A": 0.0,
+  "mean_abs_shap_B": 0.1869,
+  "rank_A": 25.0,
+  "rank_B": 4.0,
+  "rank_change": 21.0
+ },
+ {
+  "feature": "nearest_defender_to_shot_line",
+  "mean_abs_shap_A": 0.0,
+  "mean_abs_shap_B": 0.1684,
+  "rank_A": 25.0,
+  "rank_B": 5.0,
+  "rank_change": 20.0
+ },
+ {
+  "feature": "pressure_score",
+  "mean_abs_shap_A": 0.0,
+  "mean_abs_shap_B": 0.1597,
+  "rank_A": 25.0,
+  "rank_B": 6.0,
+  "rank_change": 19.0
+ },
+ {
+  "feature": "body_part_clean_Head",
+  "mean_abs_shap_A": 0.2168,
+  "mean_abs_shap_B": 0.0806,
+  "rank_A": 3.0,
+  "rank_B": 7.0,
+  "rank_change": -4.0
+ },
+ {
+  "feature": "n_defenders_in_cone",
+  "mean_abs_shap_A": 0.0,
+  "mean_abs_shap_B": 0.0692,
+  "rank_A": 25.0,
+  "rank_B": 8.0,
+  "rank_change": 17.0
+ },
+ {
+  "feature": "technique_Normal",
+  "mean_abs_shap_A": 0.1432,
+  "mean_abs_shap_B": 0.0684,
+  "rank_A": 4.0,
+  "rank_B": 9.0,
+  "rank_change": -5.0
+ },
+ {
+  "feature": "minute",
+  "mean_abs_shap_A": 0.0487,
+  "mean_abs_shap_B": 0.0576,
+  "rank_A": 6.0,
+  "rank_B": 10.0,
+  "rank_change": -4.0
+ },
+ {
+  "feature": "game_state_trailing",
+  "mean_abs_shap_A": 0.0335,
+  "mean_abs_shap_B": 0.0328,
+  "rank_A": 7.0,
+  "rank_B": 11.0,
+  "rank_change": -4.0
+ },
+ {
+  "feature": "under_pressure",
+  "mean_abs_shap_A": 0.1372,
+  "mean_abs_shap_B": 0.0291,
+  "rank_A": 5.0,
+  "rank_B": 12.0,
+  "rank_change": -7.0
+ },
+ {
+  "feature": "n_opponents_close",
+  "mean_abs_shap_A": 0.0,
+  "mean_abs_shap_B": 0.0223,
+  "rank_A": 25.0,
+  "rank_B": 13.0,
+  "rank_change": 12.0
+ },
+ {
+  "feature": "game_state_level",
+  "mean_abs_shap_A": 0.024,
+  "mean_abs_shap_B": 0.0171,
+  "rank_A": 10.0,
+  "rank_B": 14.0,
+  "rank_change": -4.0
+ },
+ {
+  "feature": "technique_Half Volley",
+  "mean_abs_shap_A": 0.0119,
+  "mean_abs_shap_B": 0.0132,
+  "rank_A": 12.0,
+  "rank_B": 15.0,
+  "rank_change": -3.0
+ },
+ {
+  "feature": "play_pattern_Regular Play",
+  "mean_abs_shap_A": 0.0259,
+  "mean_abs_shap_B": 0.0067,
+  "rank_A": 9.0,
+  "rank_B": 16.0,
+  "rank_change": -7.0
+ },
+ {
+  "feature": "n_teammates_in_cone",
+  "mean_abs_shap_A": 0.0,
+  "mean_abs_shap_B": 0.0051,
+  "rank_A": 25.0,
+  "rank_B": 17.0,
+  "rank_change": 8.0
+ },
+ {
+  "feature": "play_pattern_From Throw In",
+  "mean_abs_shap_A": 0.0048,
+  "mean_abs_shap_B": 0.0048,
+  "rank_A": 13.0,
+  "rank_B": 18.0,
+  "rank_change": -5.0
+ },
+ {
+  "feature": "technique_Volley",
+  "mean_abs_shap_A": 0.0,
+  "mean_abs_shap_B": 0.0043,
+  "rank_A": 25.0,
+  "rank_B": 19.0,
+  "rank_change": 6.0
+ },
+ {
+  "feature": "first_time",
+  "mean_abs_shap_A": 0.0045,
+  "mean_abs_shap_B": 0.0035,
+  "rank_A": 14.0,
+  "rank_B": 20.0,
+  "rank_change": -6.0
+ },
+ {
+  "feature": "technique_Lob",
+  "mean_abs_shap_A": 0.0287,
+  "mean_abs_shap_B": 0.0014,
+  "rank_A": 8.0,
+  "rank_B": 21.0,
+  "rank_change": -13.0
+ },
+ {
+  "feature": "body_part_clean_Other",
+  "mean_abs_shap_A": 0.0139,
+  "mean_abs_shap_B": 0.0,
+  "rank_A": 11.0,
+  "rank_B": 26.5,
+  "rank_change": -15.5
+ },
+ {
+  "feature": "play_pattern_From Counter",
+  "mean_abs_shap_A": 0.0,
+  "mean_abs_shap_B": 0.0,
+  "rank_A": 25.0,
+  "rank_B": 26.5,
+  "rank_change": -1.5
+ },
+ {
+  "feature": "play_pattern_From Free Kick",
+  "mean_abs_shap_A": 0.0,
+  "mean_abs_shap_B": 0.0,
+  "rank_A": 25.0,
+  "rank_B": 26.5,
+  "rank_change": -1.5
+ },
+ {
+  "feature": "play_pattern_From Goal Kick",
+  "mean_abs_shap_A": 0.0,
+  "mean_abs_shap_B": 0.0,
+  "rank_A": 25.0,
+  "rank_B": 26.5,
+  "rank_change": -1.5
+ },
+ {
+  "feature": "play_pattern_From Keeper",
+  "mean_abs_shap_A": 0.0039,
+  "mean_abs_shap_B": 0.0,
+  "rank_A": 15.0,
+  "rank_B": 26.5,
+  "rank_change": -11.5
+ },
+ {
+  "feature": "play_pattern_From Kick Off",
+  "mean_abs_shap_A": 0.0012,
+  "mean_abs_shap_B": 0.0,
+  "rank_A": 18.0,
+  "rank_B": 26.5,
+  "rank_change": -8.5
+ },
+ {
+  "feature": "play_pattern_Other",
+  "mean_abs_shap_A": 0.0,
+  "mean_abs_shap_B": 0.0,
+  "rank_A": 25.0,
+  "rank_B": 26.5,
+  "rank_change": -1.5
+ },
+ {
+  "feature": "technique_Diving Header",
+  "mean_abs_shap_A": 0.0014,
+  "mean_abs_shap_B": 0.0,
+  "rank_A": 17.0,
+  "rank_B": 26.5,
+  "rank_change": -9.5
+ },
+ {
+  "feature": "shot_type_clean_Set Piece",
+  "mean_abs_shap_A": 0.0,
+  "mean_abs_shap_B": 0.0,
+  "rank_A": 25.0,
+  "rank_B": 26.5,
+  "rank_change": -1.5
+ },
+ {
+  "feature": "technique_Overhead Kick",
+  "mean_abs_shap_A": 0.0024,
+  "mean_abs_shap_B": 0.0,
+  "rank_A": 16.0,
+  "rank_B": 26.5,
+  "rank_change": -10.5
+ }
+]

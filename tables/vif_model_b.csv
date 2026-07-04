@@ -1,0 +1,31 @@
+feature,VIF
+technique_Normal,50.65641560491676
+technique_Half Volley,35.98599901706401
+distance_to_goal,30.426885238966744
+goalkeeper_distance,25.480895253446818
+technique_Volley,16.755804517665837
+pressure_score,5.2832355870967005
+n_opponents_close,3.807580795577615
+technique_Lob,3.5010923727157146
+shot_angle_deg,2.9146532189558823
+technique_Diving Header,2.813904534547858
+play_pattern_Regular Play,2.6639465526146737
+body_part_clean_Head,2.408744335472866
+technique_Overhead Kick,2.2113097223387377
+play_pattern_From Throw In,2.1704471876251334
+n_defenders_in_cone,2.1267941887701935
+play_pattern_From Free Kick,2.0882434138929096
+game_state_level,1.706995241036862
+first_time,1.6506997059359803
+game_state_trailing,1.6462809652868324
+n_teammates_in_cone,1.559048122341107
+shot_type_clean_Set Piece,1.5028625410474865
+nearest_defender_to_shot_line,1.432673757714121
+play_pattern_From Counter,1.4258854390350355
+play_pattern_From Goal Kick,1.381286760050597
+under_pressure,1.3573989441593837
+play_pattern_From Keeper,1.1774933215246923
+play_pattern_From Kick Off,1.1174065859929818
+minute,1.1106666946638
+body_part_clean_Other,1.0970364226043272
+play_pattern_Other,1.0369124636218088

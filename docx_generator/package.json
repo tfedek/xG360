@@ -1,0 +1,12 @@
+{
+  "name": "xg-rad-docx-generator",
+  "version": "1.0.0",
+  "description": "Generator Word dokumenta (nacrt rada) za xG360 analizu",
+  "main": "generate.js",
+  "scripts": {
+    "build": "node generate.js"
+  },
+  "dependencies": {
+    "docx": "^9.6.1"
+  }
+}

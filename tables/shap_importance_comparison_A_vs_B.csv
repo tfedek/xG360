@@ -1,0 +1,32 @@
+feature,mean_abs_shap_A,mean_abs_shap_B,rank_A,rank_B,rank_change
+shot_angle_deg,0.6086,0.6743,1.0,1.0,0.0
+open_goal_angle_ratio,0.0,0.2947,25.0,2.0,23.0
+distance_to_goal,0.4502,0.2555,2.0,3.0,-1.0
+goalkeeper_anomaly,0.0,0.1869,25.0,4.0,21.0
+nearest_defender_to_shot_line,0.0,0.1684,25.0,5.0,20.0
+pressure_score,0.0,0.1597,25.0,6.0,19.0
+body_part_clean_Head,0.2168,0.0806,3.0,7.0,-4.0
+n_defenders_in_cone,0.0,0.0692,25.0,8.0,17.0
+technique_Normal,0.1432,0.0684,4.0,9.0,-5.0
+minute,0.0487,0.0576,6.0,10.0,-4.0
+game_state_trailing,0.0335,0.0328,7.0,11.0,-4.0
+under_pressure,0.1372,0.0291,5.0,12.0,-7.0
+n_opponents_close,0.0,0.0223,25.0,13.0,12.0
+game_state_level,0.024,0.0171,10.0,14.0,-4.0
+technique_Half Volley,0.0119,0.0132,12.0,15.0,-3.0
+play_pattern_Regular Play,0.0259,0.0067,9.0,16.0,-7.0
+n_teammates_in_cone,0.0,0.0051,25.0,17.0,8.0
+play_pattern_From Throw In,0.0048,0.0048,13.0,18.0,-5.0
+technique_Volley,0.0,0.0043,25.0,19.0,6.0
+first_time,0.0045,0.0035,14.0,20.0,-6.0
+technique_Lob,0.0287,0.0014,8.0,21.0,-13.0
+body_part_clean_Other,0.0139,0.0,11.0,26.5,-15.5
+play_pattern_From Counter,0.0,0.0,25.0,26.5,-1.5
+play_pattern_From Free Kick,0.0,0.0,25.0,26.5,-1.5
+play_pattern_From Goal Kick,0.0,0.0,25.0,26.5,-1.5
+play_pattern_From Keeper,0.0039,0.0,15.0,26.5,-11.5
+play_pattern_From Kick Off,0.0012,0.0,18.0,26.5,-8.5
+play_pattern_Other,0.0,0.0,25.0,26.5,-1.5
+technique_Diving Header,0.0014,0.0,17.0,26.5,-9.5
+shot_type_clean_Set Piece,0.0,0.0,25.0,26.5,-1.5
+technique_Overhead Kick,0.0024,0.0,16.0,26.5,-10.5

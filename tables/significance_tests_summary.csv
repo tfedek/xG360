@@ -1,0 +1,3 @@
+test,statistic,df_or_n,p_value,significant_at_0.05
+"Likelihood Ratio (LogReg, A vs B)",70.0304,7,1.4566930675447787e-12,True
+"Bootstrap CI razlike AUC (XGBoost, B-A)",0.037,2000,0.014,True

@@ -1,0 +1,54 @@
+const { Paragraph, PageBreak } = require('docx');
+const { h1, h2, p, pNoJustify, caption, empty } = require('./helpers');
+const F = require('./formulas');
+
+function buildPart2() {
+  return [
+    h1('Sažetak', false),
+    p('Ovaj rad predstavlja samostalnu statističku i ML analizu fudbalskih podataka sa ciljem da se odgovori na konkretno istraživačko pitanje: da li, i u kojoj meri, podaci o prostornom rasporedu igrača na terenu u trenutku šuta (StatsBomb 360) poboljšavaju procenu verovatnoće gola (Expected Goals, xG) u odnosu na model koji koristi samo klasične podatke o samom događaju šuta (udaljenost, ugao, deo tela, tip akcije).'),
+    p('Analiza je sprovedena na javno dostupnim StatsBomb open data podacima za tri velika međunarodna fudbalska turnira sa potpunim StatsBomb 360 pokrićem: Svetsko prvenstvo 2022 (64 meča), Evropsko prvenstvo 2020 (51 meč) i Evropsko prvenstvo 2024 (51 meč), što je dalo ukupno 3.968 šuteva u konačnom skupu za modelovanje, od čega 372 gola (9,4%). Penali su izdvojeni iz modela i analizirani deskriptivno, jer StatsBomb ne pruža 360 podatke za njih.'),
+    p('Metodologija obuhvata devet koraka: eksplorativnu analizu podataka, testiranje statističkih hipoteza (hi-kvadrat test, Mann-Whitney U test, Kolmogorov-Smirnov test), pripremu i pretprocesiranje podataka uz formalnu proveru pretpostavki (VIF, linearnost logita), definisanje dva skupa atributa (Model A, klasični atributi; Model B, klasični i StatsBomb 360 atributi), razvoj prediktivnih modela (logistička regresija i XGBoost) uz podešavanje hiperparametara, validaciju modela kroz Stratified K-Fold i Leave-One-Tournament-Out šeme, evaluaciju diskriminacije i kalibracije (ROC AUC, PR AUC, Brier skor, kalibracione krive), interpretaciju modela (Odds Ratio, SHAP) i diskusiju nalaza.'),
+    p('Glavni nalaz rada je da Model B konzistentno nadmašuje Model A na svim metrikama diskriminacije i kalibracije, i u Stratified K-Fold i u Leave-One-Tournament-Out validaciji, te da se taj doprinos održava kroz sva tri turnira. Otvorenost ugla ka golu, izvedena iz StatsBomb 360 podataka, pokazala se kao drugi najuticajniji atribut u SHAP analizi, odmah iza ugla šuta. Rad takođe pokazuje da je geometrija šuta (udaljenost, ugao) statistički slična kroz sva tri turnira, dok se stopa konverzije šuteva u gol značajno razlikuje po turniru, što ukazuje da razlike u performansu modela između turnira potiču pre iz varijacija u finalizaciji nego iz razlika u kvalitetu stvorenih šansi.'),
+    pNoJustify('Ključne reči: Expected Goals, StatsBomb 360, logistička regresija, XGBoost, SHAP, Leave-One-Tournament-Out validacija, fudbalska analitika', { run: { italics: true } }),
+
+    new Paragraph({ children: [new PageBreak()] }),
+
+    h1('Uvod', true, '1'),
+    p('Statistička analiza fudbalskih podataka u poslednjoj deceniji prešla je put od jednostavnih deskriptivnih pregleda (broj šuteva, posed lopte, pretrčana razdaljina) do sofisticiranih prediktivnih modela koji procenjuju kvalitet svake pojedinačne šanse za gol. Najpoznatiji takav model, Expected Goals (xG), procenjuje verovatnoću da će konkretan šut završiti golom na osnovu karakteristika tog šuta, najčešće udaljenosti od gola, ugla šuta i dela tela kojim je izveden.'),
+    p('Komercijalni provajderi sportskih podataka, među kojima je i kompanija StatsBomb, u poslednjih nekoliko godina počeli su da objavljuju i takozvane 360 podatke, koji za određene događaje u meču (najčešće šuteve) pružaju freeze frame, odnosno trenutni raspored svih vidljivih igrača na terenu. Time se otvara mogućnost da se xG model proširi prostornim atributima, kao što su broj branilaca u liniji šuta, udaljenost golmana od uobičajene pozicije ili udeo gol-okvira koji nije zaklonjen protivničkim igračima.'),
+    p('Cilj ovog rada nije da stvori bolji ili precizniji xG model od postojećih komercijalnih rešenja, niti da po prvi put dokaže da prostorni podaci uopšte imaju vrednost za xG, jer taj nalaz već postoji u dostupnoj literaturi i u sopstvenoj praksi kompanije StatsBomb. Cilj je uži i metodološki precizniji: da se na transparentan i reproducibilan način izmeri koliko konkretno prostorni atributi doprinose kvalitetu modela, i da se taj doprinos formalno proveri kroz validacionu šemu koja simulira primenu modela na potpuno nov, prethodno neviđen turnir.'),
+    p('Rad je strukturiran kao samostalna analiza, nezavisna od ostalih akademskih i profesionalnih aktivnosti autora, ali metodološki se naslanja na iskustvo sa statističkim modelovanjem binarnih ishoda (testiranje hipoteza, logistička regresija, validacija modela) stečeno u ranijem radu na analizi phishing kampanja.'),
+
+    h1('Podaci', true, '2'),
+    h2('2.1. Izvor podataka'),
+    p('Podaci su preuzeti iz StatsBomb open data repozitorijuma (github.com/statsbomb/open-data), javno dostupnog i besplatnog izvora event i 360 podataka za odabrana fudbalska takmičenja. Proverom svih takmičenja u repozitorijumu utvrđeno je da samo tri velika međunarodna turnira imaju potpuno (100%) StatsBomb 360 pokriće na nivou meča: Svetsko prvenstvo 2022 (64 od 64 meča), Evropsko prvenstvo 2020 (51 od 51 meč) i Evropsko prvenstvo 2024 (51 od 51 meč). Afrički kup nacija 2023 je razmatran kao mogući četvrti turnir, ali je odbačen jer ima 360 podatke za samo 1 od 52 meča, što je nedovoljno za uključivanje u validacionu šemu. Svetsko prvenstvo 2018 i Copa America 2024 nemaju 360 podatke u javno dostupnom repozitorijumu.'),
+    p('Svesno je odlučeno da se u analizu ne uključuju klupske lige (Bundesliga, La Liga, Ligue 1, MLS) niti žensko Svetsko prvenstvo, iako za njih takođe postoje besplatni 360 podaci. Razlog je metodološki: mešanje turnirskog (kratak, eliminacioni format, nacionalni timovi) i ligaškog (dugačka sezona, klupski timovi) konteksta, ili mešanje različitih kategorija takmičenja, uvelo bi konfundirajući faktor koji bi otežao jasno tumačenje da li model generalizuje kroz turnire ili kroz fundamentalno različite formate fudbala.'),
+
+    h2('2.2. StatsBomb 360 podaci'),
+    p('StatsBomb 360 je naziv za dodatni sloj podataka koji, za određene događaje u meču, pruža takozvani freeze frame, odnosno trenutni položaj svih vidljivih igrača na terenu u momentu tog događaja, sa naznakom da li je igrač saigrač, protivnik ili golman. Ovo se razlikuje od standardnih event podataka, koji bez 360 sloja sadrže samo poziciju lopte i igrača koji izvodi akciju, bez informacije o rasporedu ostalih igrača.'),
+    p('StatsBomb koristi sopstveni koordinatni sistem terena dimenzija 120 x 80 jedinica, gde se gol nalazi na poziciji x=120, y=40. Ovaj sistem korišćen je dosledno kroz čitav rad, uključujući i grafički prikaz terena u pratećoj demonstracionoj veb aplikaciji.'),
+
+    h2('2.3. Geometrijski atributi šuta'),
+    p('Za svaki šut, udaljenost od centra gola računa se kao euklidska udaljenost između koordinata šuta (x, y) i koordinata centra gola (120, 40):'),
+    F.eqDistance(),
+    p('Ugao šuta računa se primenom zakona kosinusa na trougao formiran tačkom šuta i dva gol-direka, gde su a i b udaljenosti od tačke šuta do levog i desnog gol-direka, a c je širina gola (7,32 metra):'),
+    F.eqAngle(),
+    p('Atribut otvorenosti ugla ka golu (open_goal_angle_ratio), izveden iz StatsBomb 360 podataka, predstavlja udeo ugla šuta koji nije zaklonjen protivničkim igračima. Za svakog protivnika koji se geometrijski nalazi između šutera i gola, procenjuje se ugaona „senka” koju njegovo telo baca prema šuteru, a zatim se sve preklapajuće senke spajaju da se izbegne dvostruko računanje istog dela gola blokiranog od dva igrača koji stoje jedan iza drugog:'),
+    F.eqOpenAngleRatio(),
+    p('gde je θ ukupan ugao šuta, a θ_blok ugao koji je efektivno blokiran (nakon spajanja preklapajućih senki).'),
+    p('Atribut najbliže udaljenosti branioca od linije šuta (nearest_defender_to_shot_line) računa se kao minimalna ortogonalna udaljenost od pozicije branioca do duži koja spaja šutera i centar gola, uzimajući u obzir samo branioce koji se nalaze između šutera i gola. Parametar t predstavlja položaj projekcije tačke branioca P na duž AB (od šutera A do centra gola B), ograničen na interval [0, 1] da projekcija ne izađe van same duži:'),
+    F.eqPointToSegment(),
+    p('Atribut defanzivnog pritiska (pressure_score) predstavlja kontinuiranu meru ukupnog defanzivnog pritiska, gde svaki protivnik unutar 10 jardi od šutera doprinosi pritisku obrnuto proporcionalno svojoj udaljenosti, sa malom konstantom (0,5) koja sprečava deljenje nulom za branioce na nultoj udaljenosti:'),
+    F.eqPressureScore(),
+    p('gde se sumiranje vrši po svim protivnicima i čija je udaljenost od šutera dᵢ manja ili jednaka 10 jardi.'),
+
+    h2('2.4. Ekstrakcija šuteva i obrada penala'),
+    p('Iz StatsBomb event podataka izdvojeni su svi događaji tipa Shot (šut) za sva tri turnira, ukupno 4.123 šuta. Za svaki šut izračunati su klasični geometrijski atributi (udaljenost od gola, ugao šuta) i, gde su dostupni, StatsBomb 360 prostorni atributi (broj branilaca u liniji šuta, otvorenost ugla ka golu, udaljenost golmana, defanzivni pritisak).'),
+    p('Tokom eksplorativne analize utvrđeno je da svi šutevi bez StatsBomb 360 podataka (135 od 4.123, odnosno 3,3%) pripadaju isključivo penalima, sa stopom konverzije od 74,1%, što je u skladu sa literaturom o uspešnosti penala. Penali su, stoga, svesno izdvojeni iz skupa za modelovanje (Model A i Model B), jer predstavljaju kvalitativno drugačiji tip šuta, fiksne udaljenosti od 11 metara, bez konteksta ostalih igrača na terenu, i tretirani su deskriptivno: ukupno 155 penala (uključujući i one sa StatsBomb 360 podacima, koji se odnose na odbijene ili blokirane penale koji su nastavljeni kao otvorena igra), sa 104 postignuta gola, odnosno stopom konverzije od 67,1%.'),
+    p('Važno je naglasiti da nedostatak StatsBomb 360 podataka za penale nije nasumičan, već sistematski i unapred određen načinom na koji StatsBomb prikuplja podatke: 360 freeze frame se po pravilu ne generiše za standardne penale, jer je situacija golman-šuter fiksne geometrije i ne zahteva isti tip prostorne analize kao šut iz otvorene igre. Drugim rečima, ovi podaci nedostaju po obrascu koji zavisi od poznate, opažene karakteristike događaja (tip šuta), a ne od neke nepoznate ili slučajne karakteristike, što opravdava njihovo potpuno izdvajanje iz Model A/B analize, a ne, na primer, imputaciju nedostajućih 360 atributa.'),
+    p('Posebno je provereno i uklonjeno 103 šuta koji potiču iz penal-shootout faze (jedanaesterci posle produžetaka, StatsBomb oznaka perioda 5), jer ta faza nije deo same utakmice u xG smislu i nema isti takmičarski i psihološki kontekst kao penal dosuđen tokom igre.'),
+    p('Konačan skup za modelovanje obuhvata 3.968 šuteva, od čega 372 gola, što odgovara stopi konverzije od 9,4% i odnosu klasa ne-gol prema gol od približno 9,7 prema 1.'),
+  ];
+}
+
+module.exports = { buildPart2 };

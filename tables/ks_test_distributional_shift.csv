@@ -1,0 +1,7 @@
+variable,tournament_1,tournament_2,ks_statistic,p_value,distributions_differ
+distance_to_goal,EURO2020,EURO2024,0.0467,0.1211,False
+distance_to_goal,EURO2020,WC2022,0.0299,0.5805,False
+distance_to_goal,EURO2024,WC2022,0.0358,0.3359,False
+shot_angle_deg,EURO2020,EURO2024,0.0388,0.2852,False
+shot_angle_deg,EURO2020,WC2022,0.0351,0.3783,False
+shot_angle_deg,EURO2024,WC2022,0.0361,0.325,False
