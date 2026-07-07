@@ -25,17 +25,17 @@
   }
   * { box-sizing: border-box; }
   html, body { margin:0; max-width:100%; overflow-x:hidden; }
-  body { background:var(--paper); color:var(--text); font-family:'Space Grotesk',sans-serif; }
+  body { background:var(--paper); color:var(--text); font-family:'Space Grotesk',sans-serif; font-size:clamp(14px, 1.6vw, 16px); line-height:1.5; }
   .mono { font-family:'IBM Plex Mono',monospace; }
   .page { max-width:1180px; margin:0 auto; padding:24px 20px 60px; width:100%; }
 
   .topbar { display:flex; justify-content:space-between; align-items:baseline;
     border-bottom:2px solid var(--card-border); padding-bottom:12px; margin-bottom:18px; flex-wrap:wrap; gap:8px;}
-  .topbar .brand { font-weight:700; font-size:19px; letter-spacing:-0.02em; color:var(--text); }
+  .topbar .brand { font-weight:700; font-size:clamp(18px, 2.2vw, 24px); letter-spacing:-0.02em; color:var(--text); }
   .topbar .brand span { color:var(--accent-pos); }
   .topbar .meta { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted);
     text-transform:uppercase; letter-spacing:.06em; }
-  .topbar nav { display:flex; gap:18px; font-size:13px; }
+  .topbar nav { display:flex; gap:18px; font-size:clamp(12px, 1.4vw, 15px); }
   .topbar nav a { color:var(--text-dim); text-decoration:none; border-bottom:1px solid transparent; cursor:pointer; }
   .topbar nav a.active, .topbar nav a:hover { border-bottom-color: var(--text); color:var(--text); }
   .intro-sub { font-size:14px; color:var(--muted); margin:-6px 0 18px; }
@@ -157,13 +157,13 @@
     border-bottom:1px solid var(--card-border); }
   .model-row:last-of-type { border-bottom:none; }
   .model-row .name { font-size:13.5px; color:var(--text-dim); }
-  .model-row .pct { font-family:'IBM Plex Mono',monospace; font-size:24px; font-weight:500; color:var(--text); }
+  .model-row .pct { font-family:'IBM Plex Mono',monospace; font-size:clamp(20px, 2.5vw, 28px); font-weight:500; color:var(--text); }
   .model-row.b .pct { color:#8fd9b0; }
   .delta-box { margin-top:12px; border-radius:4px; padding:11px 13px; display:flex; justify-content:space-between; align-items:center; }
   .delta-box.pos { background:rgba(74,222,128,.10); border:1px solid rgba(74,222,128,.3); }
   .delta-box.neg { background:rgba(248,113,113,.10); border:1px solid rgba(248,113,113,.3); }
   .delta-box .delta-label { font-size:12.5px; color:var(--text-dim); }
-  .delta-box .delta-val { font-family:'IBM Plex Mono',monospace; font-size:18px; font-weight:600; }
+  .delta-box .delta-val { font-family:'IBM Plex Mono',monospace; font-size:clamp(16px, 2vw, 20px); font-weight:600; white-space:nowrap; }
   .delta-box.pos .delta-val { color:var(--accent-pos); }
   .delta-box.neg .delta-val { color:var(--accent-neg); }
 
@@ -276,8 +276,7 @@
       <div class="layout">
         <div class="pitch-card">
           <div class="label-row">
-            <div class="title" id="shot-title">-</div>
-            <div class="sub" id="shot-sub">-</div>
+
           </div>
           <div class="pitch-wrap">
             <svg class="pitch" id="pitch-svg" viewBox="-2 -2 124 84" preserveAspectRatio="xMidYMid meet"></svg>
@@ -986,8 +985,7 @@ function runAnalysis() {
   document.getElementById('empty-state').style.display = 'none';
   document.getElementById('result-area').style.display = 'block';
 
-  document.getElementById('shot-title').textContent = `${shot.player} - ${shot.minute}'`;
-  document.getElementById('shot-sub').textContent = `${shot.team} · ${shot.tournament_label} · ${translatePlayPattern(shot.play_pattern)}`;
+
 
   if (shot.is_penalty) {
     // Penali su svesno izdvojeni iz Model A/B analize: StatsBomb ne pruža
