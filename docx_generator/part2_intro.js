@@ -26,7 +26,7 @@ function buildPart2() {
 
     h2('2.2. StatsBomb 360 podaci'),
     p('StatsBomb 360 je naziv za dodatni sloj podataka koji, za određene događaje u meču, pruža takozvani freeze frame, odnosno trenutni položaj svih vidljivih igrača na terenu u momentu tog događaja, sa naznakom da li je igrač saigrač, protivnik ili golman. Ovo se razlikuje od standardnih event podataka, koji bez 360 sloja sadrže samo poziciju lopte i igrača koji izvodi akciju, bez informacije o rasporedu ostalih igrača.'),
-    p('StatsBomb koristi sopstveni koordinatni sistem terena dimenzija 120 x 80 jedinica, gde se gol nalazi na poziciji x=120, y=40. Ovaj sistem korišćen je dosledno kroz čitav rad, uključujući i grafički prikaz terena u pratećoj demonstracionoj veb aplikaciji.'),
+    p('StatsBomb koristi sopstveni koordinatni sistem terena dimenzija 120 x 80 jedinica. Ove jedinice odgovaraju jardima (standardni fudbalski teren je 120 x 80 jardi, odnosno približno 110 x 73 metra). Gol se nalazi na poziciji x=120, y=40, a širina gola iznosi 8 jardi (7,32 metra), što u ovom koordinatnom sistemu odgovara rastojanju od y=36,34 do y=43,66. Svi geometrijski proračuni (udaljenost, ugao, radijus pritiska od 10 jardi) sprovedeni su dosledno unutar ovog sistema, bez potrebe za konverzijom. Defanzivni pritisak koristi radijus od 10 jardi, što u istom sistemu odgovara 10 koordinatnih jedinica.'),
 
     h2('2.3. Geometrijski atributi šuta'),
     p('Za svaki šut, udaljenost od centra gola računa se kao euklidska udaljenost između koordinata šuta (x, y) i koordinata centra gola (120, 40):'),
