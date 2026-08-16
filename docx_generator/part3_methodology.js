@@ -75,7 +75,7 @@ function buildPart3() {
     h2('3.8. Interpretacija modela'),
     p('Za logističku regresiju izračunati su Odds Ratio sa Wald 95% intervalima poverenja i p-vrednostima za svaki atribut. Odds Ratio za atribut i predstavlja faktor za koji se šansa (odds) gola množi kada se vrednost tog atributa poveća za jedinicu, uz fiksirane vrednosti svih ostalih atributa, i izračunava se kao exponencijal odgovarajućeg koeficijenta logističke regresije:'),
     F.eqOddsRatio(),
-    p('Vrednost OR veća od 1 ukazuje na pozitivan efekat atributa na šansu gola, a vrednost manja od 1 na negativan efekat.'),
+    p('Vrednost OR veća od 1 ukazuje na pozitivnu asocijaciju atributa sa većim odds-om gola, a vrednost manja od 1 na negativnu asocijaciju.'),
     p('Za XGBoost je primenjena SHAP (SHapley Additive exPlanations) analiza, koja predikciju modela za konkretnu opservaciju f(x) rastavlja na zbir bazne vrednosti φ₀ (prosečna predikcija na celom skupu) i doprinosa svakog atributa φᵢ:'),
     F.eqShap(),
     p('SHAP vrednosti su izvedene iz teorije kooperativnih igara (Shapley vrednosti) i imaju svojstvo da se zbir svih doprinosa φᵢ, uz baznu vrednost φ₀, egzaktno svodi na predviđenu vrednost modela za tu konkretnu opservaciju. Analiza je sprovedena bez unapred određenih očekivanja o tome koji će atributi biti najuticajniji, kako bi se izbeglo da metodologija unapred pretpostavi rezultat. Posebna pažnja posvećena je poređenju važnosti atributa između Modela A i Modela B, jer to poređenje direktno pokazuje kako se uticaj klasičnih atributa menja kada se dodaju prostorni podaci.'),
