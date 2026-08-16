@@ -17,9 +17,9 @@ function buildPart4() {
     makeTable(
       ['Model', 'ROC AUC', 'PR AUC', 'F1', 'Brier skor'],
       [
-        ['Model A, logistička regresija', '0,799', '0,418', '0,463', '0,082'],
-        ['Model A, XGBoost', '0,794', '0,439', '0,451', '0,081'],
-        ['Model B, logistička regresija', '0,804', '0,436', '0,496', '0,081'],
+        ['Model A, logistička regresija', '0,754', '0,301', '0,354', '0,076'],
+        ['Model A, XGBoost', '0,744', '0,289', '0,345', '0,076'],
+        ['Model B, logistička regresija', '0,765', '0,309', '0,383', '0,075'],
         ['Model B, XGBoost', '0,783', '0,350', '0,355', '0,159'],
       ],
       [3360, 1500, 1500, 1500, 1500]
@@ -31,9 +31,9 @@ function buildPart4() {
     makeTable(
       ['Model', 'ROC AUC', 'PR AUC', 'F1', 'Brier skor'],
       [
-        ['Model A, logistička regresija', '0,800', '0,419', '0,450', '0,081'],
-        ['Model A, XGBoost', '0,797', '0,437', '0,452', '0,081'],
-        ['Model B, logistička regresija', '0,812', '0,448', '0,500', '0,080'],
+        ['Model A, logistička regresija', '0,760', '0,301', '0,350', '0,076'],
+        ['Model A, XGBoost', '0,760', '0,293', '0,354', '0,076'],
+        ['Model B, logistička regresija', '0,769', '0,320', '0,372', '0,074'],
         ['Model B, XGBoost', '0,780', '0,347', '0,356', '0,149'],
       ],
       [3360, 1500, 1500, 1500, 1500]
@@ -45,7 +45,7 @@ function buildPart4() {
     p('Dosledna prednost Modela B kroz sve metrike i obe validacione šeme jeste snažan indirektan pokazatelj, ali ne predstavlja sama po sebi formalni statistički dokaz da razlika nije slučajna, odnosno posledica varijanse uzorka. Da bi se ova razlika formalno testirala, sprovedena su dva nezavisna testa, prilagođena svakom od dva algoritma.'),
     p('Za logističku regresiju, Model A je formalno ugnježden u Model B: svih 24 atributa Modela A predstavljaju tačan podskup 31 atributa Modela B, pri čemu su preostala 7 atributa StatsBomb 360 prostorni atributi (broj branilaca u liniji šuta, broj saigrača u istoj zoni, broj protivnika u krugu od 5 metara, otvorenost ugla ka golu, najbliža udaljenost branioca od linije šuta, defanzivni pritisak i anomalija pozicije golmana). Ugnježdena struktura modela dozvoljava primenu Likelihood Ratio (LR) testa, koji poredi logaritme verodostojnosti (log-likelihood) dva modela:'),
     F.eqLikelihoodRatio(),
-    p('gde su ℓ_A i ℓ_B logaritmi verodostojnosti Modela A i Modela B, a LR statistika prati hi-kvadrat raspodelu sa brojem stepeni slobode jednakim broju dodatnih parametara u Modelu B. Oba modela su fitovana na identičnom skupu od 3.966 šuteva (zajednički podskup, nakon uklanjanja redova s nedostajućim vrednostima opisanih u nastavku), kako bi poređenje log-likelihood vrednosti bilo validno. Rezultat je LR = 70,03, sa 7 stepeni slobode, što odgovara p-vrednosti od približno 1,46×10⁻¹², odlučno odbacujući nultu hipotezu da StatsBomb 360 atributi ne doprinose modelu. Ovaj nalaz je dodatno potkrepljen i informacionim kriterijumima: Akaikeov informacioni kriterijum (AIC) iznosi 2.088,75 za Model A i 2.032,72 za Model B, a Bajesov informacioni kriterijum (BIC) 2.245,89 naspram 2.233,86, oba favorizujući Model B uprkos kazni za veći broj parametara.'),
+    p('gde su ℓ_A i ℓ_B logaritmi verodostojnosti Modela A i Modela B, a LR statistika prati hi-kvadrat raspodelu sa brojem stepeni slobode jednakim broju dodatnih parametara u Modelu B. Oba modela su fitovana na identičnom skupu od 3.968 šuteva (bez penala), kako bi poređenje log-likelihood vrednosti bilo validno. Rezultat je LR = 64,80, sa 10 stepeni slobode, što odgovara p-vrednosti od približno 4,42×10⁻¹⁰, odlučno odbacujući nultu hipotezu da StatsBomb 360 atributi ne doprinose modelu. Ovaj nalaz je dodatno potkrepljen i informacionim kriterijumima: Akaikeov informacioni kriterijum (AIC) iznosi 2.141,44 za Model A i 2.096,63 za Model B (favorizuje B), a Bajesov informacioni kriterijum (BIC) 2.204,30 naspram 2.222,35 (favorizuje A, što je metodološki očekivano jer BIC strože kažnjava dodatne parametre na uzorcima ove veličine).'),
     p('Za XGBoost, modeli nisu ugnježdeni na isti parametarski način, pa Likelihood Ratio test nije primenjiv. Umesto toga, sprovedena je bootstrap analiza razlike ROC AUC na kompletnim out-of-fold (OOF) predikcijama iz svih LOTO foldova. Za svaki šut u datasetu postoji tačno jedna predikcija dobijena iz modela koji ga nikada nije video tokom treninga. Na ovim parnim (shot-level) predikcijama sprovedeno je 2.000 bootstrap iteracija. Opažena razlika ROC AUC (Model B minus Model A) iznosi 0,061, a 95% interval poverenja dobijen iz bootstrap raspodele iznosi [0,043, 0,079]. Pošto interval ne sadrži nulu, razlika se smatra statistički značajnom (p < 0,001). Ovaj pristup je metodološki jači od bootstrap-a na jednom train-test splitu jer koristi sve podatke kao genuino out-of-sample predikcije i čuva shot-level korelacionu strukturu.'),
     p('Napomena o Likelihood Ratio testu: LR test je primenjen isključivo na neponderisanom, nepenalizovanom logističkom modelu (standardni statsmodels Logit bez class_weight i bez regularizacije), jer ponderisanje klasa menja efektivnu likelihood funkciju i narušava standardnu interpretaciju LR statistike, AIC-a i BIC-a. Prediktivni modeli (sa regularizacijom i podešavanjem hiperparametara) koriste se za Brier/AUC izveštavanje; inferencijalni model služi isključivo za formalni test značajnosti.'),
     p('U pripremi ovih testova, iz analize su izbačena dva šuta (0,05% od 3.968) zbog rezidualne nedostajuće vrednosti u atributu otvorenosti ugla, nastale u ekstremnom geometrijskom slučaju gde je ugao šuta jednak nuli. Ovo je odvojeno i znatno manje od izdvajanja penala (135 šuteva) opisanog u poglavlju 2, i odnosi se isključivo na Model B varijante.'),
@@ -55,10 +55,10 @@ function buildPart4() {
     makeTable(
       ['Model', 'Brier skor (sirovi model)', 'Brier skor (posle kalibracije)'],
       [
-        ['Model A, logistička regresija', '0,134', '0,082'],
-        ['Model A, XGBoost', '0,124', '0,081'],
-        ['Model B, logistička regresija', '0,099', '0,081'],
-        ['Model B, XGBoost', '0,099', '0,080'],
+        ['Model A, logistička regresija', '0,155', '0,076'],
+        ['Model A, XGBoost', '0,107', '0,076'],
+        ['Model B, logistička regresija', '0,147', '0,074'],
+        ['Model B, XGBoost', '0,121', '0,075'],
       ],
       [4500, 2430, 2430]
     ),
@@ -70,12 +70,12 @@ function buildPart4() {
     makeTable(
       ['Varijanta', 'LOTO ROC AUC', 'Delta vs Model A'],
       [
-        ['Model A (bez 360)', '0,802', '-'],
-        ['Model A + SHOT_LINE', '0,802', '+0,000'],
-        ['Model A + GK', '0,805', '+0,003'],
-        ['Model A + PRESSURE', '0,807', '+0,006'],
-        ['Model A + CONE', '0,809', '+0,007'],
-        ['Model B (sve 360 grupe)', '0,812', '+0,010'],
+        ['Model A (bez 360)', '0,760', '-'],
+        ['Model A + SHOT_LINE', '0,760', '+0,000'],
+        ['Model A + GK', '0,764', '+0,004'],
+        ['Model A + PRESSURE', '0,767', '+0,007'],
+        ['Model A + CONE', '0,768', '+0,008'],
+        ['Model B (sve 360 grupe)', '0,773', '+0,013'],
       ]
     ),
     p('Rezultati pokazuju da najveći deo inkrementalne vrednosti dolazi iz informacije o broju i rasporedu protivnika u konusu šuta (CONE, +0,007), zatim iz defanzivnog pritiska (PRESSURE, +0,006), dok pozicija golmana donosi manji, ali merljiv doprinos (+0,003). Udaljenost branioca od linije šuta (SHOT_LINE) ne donosi praktično nikakav inkrementalni doprinos (+0,000) kad se doda sama, bez ostalih 360 atributa. Zaključak je da nije ceo 360 sloj podjednako vredan: najveći deo poboljšanja dolazi iz geometrijske informacije o zagušenosti prostora između šutera i gola.'),

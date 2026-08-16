@@ -27,6 +27,9 @@ from football_xg.config import (
 
 def load_modeling_data(path):
     df = pd.read_csv(path)
+    # Exclude penalties (no 360 data, fixed geometry, separate analysis)
+    if "shot_type" in df.columns:
+        df = df[df["shot_type"] != "Penalty"].reset_index(drop=True)
     df = df.drop(columns=["shot_statsbomb_xg"], errors="ignore")
 
     for col in MODEL_B_NUMERIC:
