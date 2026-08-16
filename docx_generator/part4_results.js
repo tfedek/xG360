@@ -20,7 +20,7 @@ function buildPart4() {
         ['Model A, logistička regresija', '0,754', '0,301', '0,354', '0,076'],
         ['Model A, XGBoost', '0,744', '0,289', '0,345', '0,076'],
         ['Model B, logistička regresija', '0,765', '0,309', '0,383', '0,075'],
-        ['Model B, XGBoost', '0,783', '0,350', '0,355', '0,159'],
+        ['Model B, XGBoost', '0,758', '0,294', '0,376', '0,076'],
       ],
       [3360, 1500, 1500, 1500, 1500]
     ),
@@ -34,7 +34,7 @@ function buildPart4() {
         ['Model A, logistička regresija', '0,760', '0,301', '0,350', '0,076'],
         ['Model A, XGBoost', '0,760', '0,293', '0,354', '0,076'],
         ['Model B, logistička regresija', '0,769', '0,320', '0,372', '0,074'],
-        ['Model B, XGBoost', '0,780', '0,347', '0,356', '0,149'],
+        ['Model B, XGBoost', '0,770', '0,310', '0,389', '0,075'],
       ],
       [3360, 1500, 1500, 1500, 1500]
     ),
@@ -66,7 +66,7 @@ function buildPart4() {
 
     h2('4.5. Ablation analiza: doprinos pojedinačnih grupa 360 atributa'),
     p('Da bi se preciziralo koji deo prostorne informacije proizvodi poboljšanje, sprovedena je ablation analiza u kojoj su 360 atributi podeljeni u četiri grupe: golman (GK - udaljenost golmana), konusni branioci (CONE - branioci u konusu šuta i između šutera i gola), defanzivni pritisak (PRESSURE - pressure_score, broj branilaca u blizini), i linija šuta (SHOT_LINE - najbliži branilac liniji šuter-gol). Za svaku grupu treniran je Model A sa jednom dodatom grupom, i merena je LOTO AUC razlika u odnosu na čist Model A.'),
-    caption('Tabela 5. Ablation analiza: inkrementalni doprinos svake grupe 360 atributa'),
+    caption('Tabela 5. Ablation analiza: inkrementalni doprinos svake grupe 360 atributa (logistička regresija, LOTO validacija)'),
     makeTable(
       ['Varijanta', 'LOTO ROC AUC', 'Delta vs Model A'],
       [
