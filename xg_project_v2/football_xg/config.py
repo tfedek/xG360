@@ -67,6 +67,9 @@ MODEL_B_NUMERIC = MODEL_A_NUMERIC + [
 
     # pressure summary
     "pressure_score_360",
+
+    # open goal angle (proportion of goal visible/unblocked)
+    "open_angle_ratio_360",
 ]
 
 

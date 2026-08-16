@@ -57,6 +57,7 @@ GROUPS_360 = {
     "SHOT_LINE": ["nearest_defender_to_shot_line_360",
                    "defenders_within_1m_of_shot_line_360",
                    "defenders_within_2m_of_shot_line_360"],
+    "OPEN_ANGLE": ["open_angle_ratio_360"],
 }
 
 
