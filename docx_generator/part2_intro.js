@@ -38,9 +38,9 @@ function buildPart2() {
     p('gde je θ ukupan ugao šuta, a θ_blok ugao koji je efektivno blokiran (nakon spajanja preklapajućih senki).'),
     p('Atribut najbliže udaljenosti branioca od linije šuta (nearest_defender_to_shot_line) računa se kao minimalna ortogonalna udaljenost od pozicije branioca do duži koja spaja šutera i centar gola, uzimajući u obzir samo branioce koji se nalaze između šutera i gola. Parametar t predstavlja položaj projekcije tačke branioca P na duž AB (od šutera A do centra gola B), ograničen na interval [0, 1] da projekcija ne izađe van same duži:'),
     F.eqPointToSegment(),
-    p('Atribut defanzivnog pritiska (pressure_score) predstavlja kontinuiranu meru ukupnog defanzivnog pritiska, gde svaki protivnik unutar 10 jardi od šutera doprinosi pritisku obrnuto proporcionalno svojoj udaljenosti, sa malom konstantom (0,5) koja sprečava deljenje nulom za branioce na nultoj udaljenosti:'),
+    p('Atribut defanzivnog pritiska (pressure_score) predstavlja kontinuiranu meru ukupnog defanzivnog pritiska, gde svaki protivnik unutar 10 koordinatnih jedinica (yard-ekvivalentno) od šutera doprinosi pritisku obrnuto proporcionalno svojoj udaljenosti, sa malom konstantom (0,5) koja sprečava deljenje nulom za branioce na nultoj udaljenosti:'),
     F.eqPressureScore(),
-    p('gde se sumiranje vrši po svim protivnicima i čija je udaljenost od šutera dᵢ manja ili jednaka 10 jardi.'),
+    p('gde se sumiranje vrši po svim protivnicima čija je udaljenost od šutera dᵢ manja ili jednaka 10 koordinatnih jedinica.'),
 
     h2('2.4. Ekstrakcija šuteva i obrada penala'),
     p('Iz StatsBomb event podataka izdvojeni su svi događaji tipa Shot (šut) za sva tri turnira, ukupno 4.123 šuta. Za svaki šut izračunati su klasični geometrijski atributi (udaljenost od gola, ugao šuta) i, gde su dostupni, StatsBomb 360 prostorni atributi (broj branilaca u liniji šuta, otvorenost ugla ka golu, udaljenost golmana, defanzivni pritisak).'),
