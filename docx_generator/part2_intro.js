@@ -33,7 +33,7 @@ function buildPart2() {
     F.eqDistance(),
     p('Ugao šuta računa se primenom zakona kosinusa na trougao formiran tačkom šuta i dva gol-direka, gde su a i b udaljenosti od tačke šuta do levog i desnog gol-direka, a c je širina gola (7,32 metra):'),
     F.eqAngle(),
-    p('Atribut otvorenosti ugla ka golu (open_goal_angle_ratio), izveden iz StatsBomb 360 podataka, predstavlja udeo ugla šuta koji nije zaklonjen protivničkim igračima. Za svakog protivnika koji se geometrijski nalazi između šutera i gola, procenjuje se ugaona „senka” koju njegovo telo baca prema šuteru, a zatim se sve preklapajuće senke spajaju da se izbegne dvostruko računanje istog dela gola blokiranog od dva igrača koji stoje jedan iza drugog:'),
+    p('Atribut otvorenosti ugla ka golu (open_angle_ratio_360), izveden iz StatsBomb 360 podataka, predstavlja udeo ugla šuta koji nije zaklonjen protivničkim igračima. Za svakog protivnika koji se geometrijski nalazi između šutera i gola, procenjuje se ugaona „senka” koju njegovo telo baca prema šuteru, a zatim se sve preklapajuće senke spajaju da se izbegne dvostruko računanje istog dela gola blokiranog od dva igrača koji stoje jedan iza drugog:'),
     F.eqOpenAngleRatio(),
     p('gde je θ ukupan ugao šuta, a θ_blok ugao koji je efektivno blokiran (nakon spajanja preklapajućih senki).'),
     p('Atribut najbliže udaljenosti branioca od linije šuta (nearest_defender_to_shot_line) računa se kao minimalna ortogonalna udaljenost od pozicije branioca do duži koja spaja šutera i centar gola, uzimajući u obzir samo branioce koji se nalaze između šutera i gola. Parametar t predstavlja položaj projekcije tačke branioca P na duž AB (od šutera A do centra gola B), ograničen na interval [0, 1] da projekcija ne izađe van same duži:'),
