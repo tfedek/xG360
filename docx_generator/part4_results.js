@@ -13,7 +13,7 @@ function buildPart4() {
     p('Formalni Kolmogorov-Smirnov test pokazao je da se raspodela udaljenosti od gola i ugla šuta statistički ne razlikuju značajno između bilo koja dva turnira (p > 0,05 za sve parove). Ovo je ključan nalaz za tumačenje razlike u stopi konverzije: ako geometrija šuta, odnosno gde se šutira, nije različita na Evropskom prvenstvu 2024, a stopa konverzije jeste niža, razlika potiče iz finalizacije šanse (kvalitet izvedbe, slučajnost, golmani), a ne iz kvaliteta ili lokacije stvorenih šansi.'),
 
     h2('4.2. Performans modela: Stratified K-Fold validacija'),
-    caption('Tabela 2. Rezultati Stratified K-Fold validacije (prosek kroz 5 foldova)'),
+    caption('Tabela 2. Rezultati Stratified K-Fold validacije (prosek kroz 5 foldova). Brier skor prikazuje vrednost posle post-hoc kalibracije (izotona regresija unutar folda).'),
     makeTable(
       ['Model', 'ROC AUC', 'PR AUC', 'F1', 'Brier skor'],
       [
@@ -27,7 +27,7 @@ function buildPart4() {
     p('Model B nadmašuje Model A na svim metrikama, bez obzira na to koji algoritam je korišćen. Logistička regresija ostvaruje viši ROC AUC i PR AUC od XGBoost-a u oba slučaja, dok XGBoost ostvaruje niži, odnosno bolji Brier skor, što ukazuje da XGBoost ima blago slabiju diskriminaciju ali bolju kalibraciju u odnosu na logističku regresiju na ovom skupu podataka.'),
 
     h2('4.3. Generalizacija kroz turnire: Leave-One-Tournament-Out validacija'),
-    caption('Tabela 3. Rezultati Leave-One-Tournament-Out validacije (prosek kroz tri turnira)'),
+    caption('Tabela 3. Rezultati Leave-One-Tournament-Out validacije (prosek kroz tri turnira). Brier skor prikazuje vrednost posle post-hoc kalibracije.'),
     makeTable(
       ['Model', 'ROC AUC', 'PR AUC', 'F1', 'Brier skor'],
       [
@@ -78,7 +78,7 @@ function buildPart4() {
         ['Model B (sve 360 grupe)', '0,773', '+0,013'],
       ]
     ),
-    p('Rezultati pokazuju da najveći deo inkrementalne vrednosti dolazi iz informacije o broju i rasporedu protivnika u konusu šuta (CONE, +0,007), zatim iz defanzivnog pritiska (PRESSURE, +0,006), dok pozicija golmana donosi manji, ali merljiv doprinos (+0,003). Udaljenost branioca od linije šuta (SHOT_LINE) ne donosi praktično nikakav inkrementalni doprinos (+0,000) kad se doda sama, bez ostalih 360 atributa. Zaključak je da nije ceo 360 sloj podjednako vredan: najveći deo poboljšanja dolazi iz geometrijske informacije o zagušenosti prostora između šutera i gola.'),
+    p('Rezultati pokazuju da najveći deo inkrementalne vrednosti dolazi iz informacije o broju i rasporedu protivnika u konusu šuta (CONE, +0,008), zatim iz defanzivnog pritiska (PRESSURE, +0,007), dok pozicija golmana donosi manji, ali merljiv doprinos (+0,004). Udaljenost branioca od linije šuta (SHOT_LINE) ne donosi praktično nikakav inkrementalni doprinos kad se doda sama, bez ostalih 360 atributa. Zaključak je da nije ceo 360 sloj podjednako vredan: najveći deo poboljšanja dolazi iz geometrijske informacije o zagušenosti prostora između šutera i gola. Napomena: ROC AUC za pun Model B u Tabeli 5 (0,773) blago se razlikuje od vrednosti u Tabeli 3 (0,769) jer ablation analiza koristi logističku regresiju bez hiperparametarskog podešavanja (GridSearchCV), za razliku od Tabele 3 gde je model optimizovan unutar svakog folda.'),
 
     h2('4.6. Interpretacija modela: Odds Ratio i SHAP'),
     p('Logistička regresija na Modelu B pokazuje statistički značajan i fudbalski smislen Odds Ratio za ključne atribute: veća udaljenost od gola smanjuje šansu za gol, veći ugao šuta povećava šansu, šut glavom ima značajno niži Odds Ratio u odnosu na šut nogom, a veći udeo otvorenog (nezaklonjenog) ugla ka golu značajno povećava šansu (Odds Ratio približno 3,1; p < 0,001), što je u skladu sa nalazima iz literature o nižoj stopi konverzije udaraca glavom u odnosu na udarce nogom.'),
