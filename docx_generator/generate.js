@@ -64,6 +64,6 @@ const doc = new Document({
 });
 
 Packer.toBuffer(doc).then((buffer) => {
-  fs.writeFileSync('/home/claude/docx_build/xg_rad_nacrt.docx', buffer);
+  fs.writeFileSync('/Users/fedektom/Downloads/xg_analiza/xg_rad_nacrt.docx', buffer);
   console.log('Sačuvano: xg_rad_nacrt.docx');
 });

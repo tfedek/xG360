@@ -112,6 +112,11 @@ function numbered(text) {
 
 // Tabela: header red + podaci, kolone se daju kao niz širina (DXA), zbir = CONTENT_DXA
 function makeTable(headerCells, rows, colWidths) {
+  if (!colWidths) {
+    const n = headerCells.length;
+    const each = Math.floor(9000 / n);
+    colWidths = Array(n).fill(each);
+  }
   const totalW = colWidths.reduce((a, b) => a + b, 0);
   const headerRow = new TableRow({
     tableHeader: true,

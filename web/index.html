@@ -419,22 +419,41 @@
 let SHOTS = [], FRAMES = {}, COEFS = {}, SHAP = [], EVAL = {}, CALIBRATION = {};
 let currentMatchShots = [];
 
+async function fetchWithTimeout(url, ms = 60000) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), ms);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    if (!res.ok) throw new Error(`${url} -> HTTP ${res.status}`);
+    return await res.json();
+  } finally {
+    clearTimeout(id);
+  }
+}
+
+const BASE = location.pathname.replace(/\/[^/]*$/, '') + '/';
+
 async function loadData() {
-  const [shots, frames, coefs, shap, evalSummary, calibration] = await Promise.all([
-    fetch('data/shots.json').then(r => r.json()),
-    fetch('data/freeze_frames.json').then(r => r.json()),
-    fetch('data/model_coefs.json').then(r => r.json()),
-    fetch('data/shap_importance.json').then(r => r.json()),
-    fetch('data/evaluation_summary.json').then(r => r.json()),
-    fetch('data/calibration_maps.json').then(r => r.json()),
-  ]);
-  SHOTS = shots; FRAMES = frames; COEFS = coefs; SHAP = shap; EVAL = evalSummary; CALIBRATION = calibration;
-  initTournamentSelect();
-  initPlayerVsAllTab();
-  renderShap();
-  renderEvalTables();
-  renderDistribution();
-  renderCompare();
+  try {
+    const [shots, frames, coefs, shap, evalSummary, calibration] = await Promise.all([
+      fetchWithTimeout(BASE + 'data/shots.json'),
+      fetchWithTimeout(BASE + 'data/freeze_frames.json'),
+      fetchWithTimeout(BASE + 'data/model_coefs.json'),
+      fetchWithTimeout(BASE + 'data/shap_importance.json'),
+      fetchWithTimeout(BASE + 'data/evaluation_summary.json'),
+      fetchWithTimeout(BASE + 'data/calibration_maps.json'),
+    ]);
+    SHOTS = shots; FRAMES = frames; COEFS = coefs; SHAP = shap; EVAL = evalSummary; CALIBRATION = calibration;
+    initTournamentSelect();
+    initPlayerVsAllTab();
+    renderShap();
+    renderEvalTables();
+    renderDistribution();
+    renderCompare();
+  } catch (err) {
+    console.error('loadData failed:', err);
+    document.getElementById('sel-tournament').innerHTML = '<option>Greska pri ucitavanju podataka</option>';
+  }
 }
 
 // ===================== UI INICIJALIZACIJA (padajući meniji, prevodi) =====================
@@ -459,7 +478,7 @@ function initPlayerSelect() {
   // "Goal-only xG explorer" - svrha je analiza konkretnih golova, ne
   // svih šuteva, da izbor ostane fokusiran i kratak).
   const scorers = [...new Set(
-    SHOTS.filter(s => s.tournament === t && s.is_goal === 1).map(s => s.player)
+    SHOTS.filter(s => s.tournament === t && s.is_goal).map(s => s.player)
   )].sort((a, b) => a.localeCompare(b));
 
   pSel.innerHTML = scorers.map(p => `<option value="${p}">${p}</option>`).join('');
@@ -473,7 +492,7 @@ function initGoalSelect() {
   const gSel = document.getElementById('sel-goal');
   const t = tSel.value, player = pSel.value;
 
-  const goals = SHOTS.filter(s => s.tournament === t && s.player === player && s.is_goal === 1)
+  const goals = SHOTS.filter(s => s.tournament === t && s.player === player && s.is_goal)
                       .sort((a, b) => a.match_id - b.match_id || a.minute - b.minute);
 
   gSel.innerHTML = goals.map(g => {
@@ -585,16 +604,11 @@ function buildFeatureVector(shot, modelDef) {
 // ili automatizovan test koji ne čeka). Bez ove provere, predict() bi pucao
 // sa "Cannot read property 'intercept' of undefined" umesto jasne poruke.
 function predict(shot, modelKey) {
-  const model = COEFS[modelKey === 'a' ? 'model_a' : 'model_b'];
-  if (!model || !model.features) {
-    console.warn('predict() pozvan pre nego što su model_coefs.json podaci učitani.');
-    return null;
-  }
-  const f = buildFeatureVector(shot, modelKey);
-  let z = model.intercept;
-  model.features.forEach((name, i) => { z += (f[name] ?? 0) * model.coefficients[i]; });
-  const rawProb = sigmoid(z);
-  return applyCalibration(rawProb, modelKey);
+  // v2: xG je preračunat u Python pipeline-u (CalibratedClassifierCV unutar folda)
+  // i izvezen direktno u shots.json kao xg_a/xg_b - ne računamo uživo
+  if (modelKey === 'a') return shot.xg_a ?? null;
+  if (modelKey === 'b') return shot.xg_b ?? null;
+  return null;
 }
 
 // Piecewise-linear interpolacija kroz tačke izotone kalibracije (izvezene
@@ -635,8 +649,8 @@ function drawPitch(shot) {
 
   let playersHtml = '';
   if (frame) {
-    frame.players.forEach(p => {
-      const color = p.teammate ? 'var(--teamA)' : (p.position === 'Goalkeeper' ? '#5b3fa0' : 'var(--teamB)');
+    frame.forEach(p => {
+      const color = p.teammate ? 'var(--teamA)' : (p.keeper ? '#5b3fa0' : 'var(--teamB)');
       const stroke = p.teammate ? 'var(--teamA-line)' : 'none';
       playersHtml += `<circle cx="${p.x}" cy="${p.y}" r="1.9" fill="${color}" ${stroke!=='none'?`stroke="${stroke}" stroke-width="0.3"`:''}/>`;
     });
