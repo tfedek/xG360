@@ -223,7 +223,7 @@ def run_lr_test_statsmodels(df):
         X_fit = X_all[mask]
         y_fit = y[mask]
 
-        fit = sm.Logit(y_fit, X_fit).fit(disp=False, maxiter=300)
+        fit = sm.Logit(y_fit, X_fit).fit(disp=False, maxiter=2000, method='lbfgs')
         results[label] = fit
         print(f"  Model {label}: llf={fit.llf:.4f}, AIC={fit.aic:.2f}, BIC={fit.bic:.2f}, n={len(y_fit)}")
 
