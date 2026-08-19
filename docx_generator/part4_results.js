@@ -19,8 +19,8 @@ function buildPart4() {
       [
         ['Model A, logistička regresija', '0,755', '0,294', '0,362', '0,076'],
         ['Model A, XGBoost', '0,753', '0,301', '0,359', '0,076'],
-        ['Model B, logistička regresija', '0,772', '0,319', '0,379', '0,074'],
-        ['Model B, XGBoost', '0,758', '0,290', '0,365', '0,076'],
+        ['Model B, logistička regresija', '0,770', '0,318', '0,378', '0,074'],
+        ['Model B, XGBoost', '0,760', '0,298', '0,366', '0,075'],
       ],
       [3360, 1500, 1500, 1500, 1500]
     ),
@@ -34,7 +34,7 @@ function buildPart4() {
         ['Model A, logistička regresija', '0,759', '0,299', '0,346', '0,076'],
         ['Model A, XGBoost', '0,756', '0,290', '0,352', '0,076'],
         ['Model B, logistička regresija', '0,777', '0,329', '0,388', '0,074'],
-        ['Model B, XGBoost', '0,770', '0,310', '0,394', '0,075'],
+        ['Model B, XGBoost', '0,772', '0,310', '0,401', '0,074'],
       ],
       [3360, 1500, 1500, 1500, 1500]
     ),
@@ -45,8 +45,8 @@ function buildPart4() {
     p('Dosledna prednost Modela B u ROC AUC i PR AUC kroz obe validacione šeme jeste snažan indirektan pokazatelj, ali ne predstavlja sama po sebi formalni statistički dokaz da razlika nije slučajna. Da bi se ova razlika formalno testirala, sprovedena su dva nezavisna testa, prilagođena svakom od dva algoritma.'),
     p('Za logističku regresiju, Model A je formalno ugnježden u Model B: atributi Modela A predstavljaju tačan podskup atributa Modela B, pri čemu Model B sadrži svih 11 dodatnih StatsBomb 360 prostornih atributa navedenih u odeljku 3.4. Ugnježdena struktura modela dozvoljava primenu Likelihood Ratio (LR) testa, koji poredi logaritme verodostojnosti (log-likelihood) dva modela:'),
     F.eqLikelihoodRatio(),
-    p('gde su ℓ_A i ℓ_B logaritmi verodostojnosti Modela A i Modela B, a LR statistika prati hi-kvadrat raspodelu sa brojem stepeni slobode jednakim broju dodatnih parametara u Modelu B. Oba modela su fitovana na identičnom skupu od 3.967 šuteva (bez penala, bez 1 šuta sa uglom jednakim nuli), kako bi poređenje log-likelihood vrednosti bilo validno. Rezultat je LR = 67,98, sa 11 stepeni slobode, što odgovara p-vrednosti od približno 2,95×10⁻¹⁰, odlučno odbacujući nultu hipotezu da StatsBomb 360 atributi ne doprinose modelu. Akaikeov informacioni kriterijum: AIC iznosi 2.139,93 za Model A i 2.093,95 za Model B (favorizuje B). Bajesov informacioni kriterijum (BIC) iznosi 2.202,79 naspram 2.225,95 (favorizuje A, što je metodološki očekivano jer BIC strože kažnjava dodatne parametre).'),
-    p('Za poređenje na nivou pojedinačnih šuteva, sprovedena je bootstrap analiza razlike ROC AUC na kompletnim out-of-fold (OOF) predikcijama iz svih LOTO foldova. Pooled OOF ROC AUC iznosi 0,677 za Model A i 0,688 za Model B. Opažena razlika (Model B minus Model A) iznosi 0,010, a 95% bootstrap interval poverenja (2.000 iteracija) iznosi [-0,015, 0,037]. Interval sadrži nulu, što znači da na nivou pojedinačnog šuta razlika nije statistički značajna na alfa=0,05. Ovo je vredan nalaz koji zaslužuje transparentno prikazivanje: signal od 360 atributa je realan ali umeren. Na nivou turnira (LOTO validacija, Tabela 3), razlika je konzistentna i praktično smislena (+0,018 AUC). LR test potvrđuje da 360 atributi nose stvarnu inkrementalnu informaciju (p=2,95×10⁻¹⁰). Zaključak je da 360 atributi poboljšavaju model konzistentno kroz turnire, ali efekt na nivou pojedinačnog šuta nije toliko jak da preživi konzervativni shot-level bootstrap.'),
+    p('gde su ℓ_A i ℓ_B logaritmi verodostojnosti Modela A i Modela B, a LR statistika prati hi-kvadrat raspodelu sa brojem stepeni slobode jednakim broju dodatnih parametara u Modelu B. Oba modela su fitovana na identičnom skupu od 3.967 šuteva (bez penala, bez 1 šuta sa uglom jednakim nuli), kako bi poređenje log-likelihood vrednosti bilo validno. Rezultat je LR = 67,97, sa 11 stepeni slobode, što odgovara p-vrednosti od približno 2,97×10⁻¹⁰, odlučno odbacujući nultu hipotezu da StatsBomb 360 atributi ne doprinose modelu. Akaikeov informacioni kriterijum: AIC iznosi 2.139,93 za Model A i 2.093,96 za Model B (favorizuje B). Bajesov informacioni kriterijum (BIC) iznosi 2.202,79 naspram 2.225,96 (favorizuje A, što je metodološki očekivano jer BIC strože kažnjava dodatne parametre).'),
+    p('Za poređenje na nivou pojedinačnih šuteva, sprovedena je bootstrap analiza razlike ROC AUC na kompletnim out-of-fold (OOF) predikcijama iz svih LOTO foldova. Pooled OOF ROC AUC iznosi 0,677 za Model A i 0,675 za Model B. Opažena razlika (Model B minus Model A) iznosi -0,003, a 95% bootstrap interval poverenja (2.000 iteracija) iznosi [-0,047, 0,040]. Interval sadrži nulu, što znači da na nivou pojedinačnog šuta razlika nije statistički značajna na alfa=0,05. Ovo je vredan nalaz koji zaslužuje transparentno prikazivanje: signal od 360 atributa je realan ali umeren. Na nivou turnira (LOTO validacija, Tabela 3), razlika je konzistentna i praktično smislena (+0,017 AUC). LR test potvrđuje da 360 atributi nose stvarnu inkrementalnu informaciju (p=2,97×10⁻¹⁰). Zaključak je da 360 atributi poboljšavaju model konzistentno kroz turnire, ali efekt na nivou pojedinačnog šuta nije toliko jak da preživi konzervativni shot-level bootstrap sa grupnom korekcijom.'),
     p('Napomena o Likelihood Ratio testu: LR test je primenjen isključivo na neponderisanom, nepenalizovanom logističkom modelu (standardni statsmodels Logit bez class_weight i bez regularizacije), jer ponderisanje klasa menja efektivnu likelihood funkciju i narušava standardnu interpretaciju LR statistike, AIC-a i BIC-a. Prediktivni modeli (sa regularizacijom i podešavanjem hiperparametara) koriste se za Brier/AUC izveštavanje; inferencijalni model služi isključivo za formalni test značajnosti.'),
 
     h2('4.4. Kalibracija i post-hoc korekcija'),
@@ -56,12 +56,12 @@ function buildPart4() {
       [
         ['Model A, logistička regresija', '0,146', '0,076'],
         ['Model A, XGBoost', '0,095', '0,076'],
-        ['Model B, logistička regresija', '0,139', '0,074'],
-        ['Model B, XGBoost', '0,091', '0,076'],
+        ['Model B, logistička regresija', '0,117', '0,074'],
+        ['Model B, XGBoost', '0,087', '0,075'],
       ],
       [4500, 2430, 2430]
     ),
-    p('Sirovi modeli, pre post-hoc kalibracije, pokazuju sistematsku prekalibrisanost u višem opsegu predviđenih verovatnoća. Primena izotone regresije kao post-hoc kalibracije značajno poboljšava Brier skor za sve četiri kombinacije modela (redukcije od 16% do 48% u zavisnosti od modela i validacione šeme).'),
+    p('Sirovi modeli, pre post-hoc kalibracije, pokazuju sistematsku prekalibrisanost u višem opsegu predviđenih verovatnoća. Primena izotone regresije kao post-hoc kalibracije značajno poboljšava Brier skor za sve četiri kombinacije modela (redukcije od 14% do 48% u zavisnosti od modela i validacione šeme).'),
 
     h2('4.5. Ablation analiza: doprinos pojedinačnih grupa 360 atributa'),
     p('Da bi se preciziralo koji deo prostorne informacije proizvodi poboljšanje, sprovedena je ablation analiza u kojoj su 360 atributi podeljeni u pet grupa: golman (GK - udaljenost golmana), konusni branioci (CONE - branioci u konusu šuta i između šutera i gola), defanzivni pritisak (PRESSURE - pressure_score, broj branilaca u blizini), linija šuta (SHOT_LINE - najbliži branilac liniji šuter-gol), i otvorenost ugla (OPEN_ANGLE - open_angle_ratio_360). Za svaku grupu treniran je Model A sa jednom dodatom grupom, i merena je LOTO AUC razlika u odnosu na čist Model A.'),

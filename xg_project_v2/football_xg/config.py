@@ -56,7 +56,6 @@ MODEL_B_NUMERIC = MODEL_A_NUMERIC + [
     "defenders_within_10m_360",
 
     # shooting lane / crowding
-    "defenders_in_shot_cone_360",
     "opponents_between_shooter_and_goal_360",
     "opponents_in_box_360",
 
