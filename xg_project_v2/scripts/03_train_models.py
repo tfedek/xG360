@@ -199,10 +199,17 @@ def run_lr_test_statsmodels(df):
     results = {}
     for label, numeric in [("A_classic", MODEL_A_NUMERIC),
                              ("B_360",     MODEL_B_NUMERIC)]:
-        X_num, y, _, _ = prepare_xy(df_no_pen, numeric)
+        _, y, _, _ = prepare_xy(df_no_pen, numeric)
+        # Prepare numeric features manually (statsmodels needs clean numpy)
+        X_num_raw = df_no_pen[numeric].copy()
+        for col in numeric:
+            X_num_raw[col] = pd.to_numeric(X_num_raw[col], errors="coerce")
+            X_num_raw[col] = X_num_raw[col].replace([np.inf, -np.inf], np.nan)
+            X_num_raw[col] = X_num_raw[col].fillna(X_num_raw[col].median())
         # One-hot encode categoricals manually (statsmodels needs numpy)
         X_cat = pd.get_dummies(df_no_pen[CATEGORICAL], drop_first=True)
-        X_all = pd.concat([X_num[numeric], X_cat], axis=1).astype(float)
+        X_cat.index = X_num_raw.index
+        X_all = pd.concat([X_num_raw, X_cat], axis=1).astype(float)
         X_all = sm.add_constant(X_all)
 
         # Drop NaN rows (identical subset to sklearn pipeline)
