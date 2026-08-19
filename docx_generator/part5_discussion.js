@@ -33,11 +33,11 @@ function buildPart5() {
 
     h1('Literatura', true, '7'),
     p('Degrenne, O., & Carling, C. (2024). Comparison of goalscoring patterns between the 2018 and 2022 FIFA World Cups. Frontiers in Sports and Active Living, 6, 1394621. https://doi.org/10.3389/fspor.2024.1394621', { noIndent: true }),
+    p('Fedek, T. (2026). xG360: Doprinos StatsBomb 360 prostornih podataka u proceni verovatnoce gola [izvorni kod]. GitHub. https://github.com/tfedek/xG360', { noIndent: true }),
     p('Iapteff, L., Le Coz, S., Rioland, M., Houde, T., Carling, C., & Imbach, F. (2025). Toward interpretable expected goals modeling using Bayesian mixed models. Frontiers in Sports and Active Living, 7, 1504362. https://doi.org/10.3389/fspor.2025.1504362', { noIndent: true }),
     p('Singh, S. (2025). Improving expected Goals (xG) models: methods, results, and novel extensions. Journal of High School Science, 9(3), 475-485. https://doi.org/10.64336/001c.144180', { noIndent: true }),
     p('StatsBomb. (2023). StatsBomb open data repozitorijum [skup podataka]. GitHub. https://github.com/statsbomb/open-data', { noIndent: true }),
     p('van der Wurp, H., Groll, A., Kneib, T., Marra, G., & Radice, R. (2020). Generalised joint regression for count data: a penalty extension for competitive settings. Statistics and Computing, 30(5), 1419-1432. https://doi.org/10.1007/s11222-020-09953-7', { noIndent: true }),
-    p('Fedek, T. (2026). xG360: Doprinos StatsBomb 360 prostornih podataka u proceni verovatnoce gola [izvorni kod]. GitHub. https://github.com/tfedek/xG360', { noIndent: true }),
   ];
 }
 
