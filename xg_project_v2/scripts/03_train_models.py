@@ -28,7 +28,7 @@ from scipy import stats
 
 import statsmodels.api as sm
 
-from sklearn.model_selection import StratifiedKFold, LeaveOneGroupOut, GridSearchCV
+from sklearn.model_selection import StratifiedKFold, StratifiedGroupKFold, LeaveOneGroupOut, GridSearchCV
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
@@ -56,7 +56,7 @@ ensure_dirs(MODELS_DIR, OUTPUT_DIR / "model_training")
 # Helper: prepare X, y, groups
 # ============================================================
 def prepare_xy(df, numeric_features):
-    used_cols = numeric_features + CATEGORICAL + [TARGET, "tournament"]
+    used_cols = numeric_features + CATEGORICAL + [TARGET, "tournament", "match_id"]
     data = df[used_cols].copy()
 
     for col in numeric_features:
@@ -72,15 +72,17 @@ def prepare_xy(df, numeric_features):
 
     data[TARGET] = data[TARGET].astype(int)
     data["tournament"] = data["tournament"].astype(str)
+    data["match_id"] = data["match_id"].astype(str)
 
     X = data[numeric_features + CATEGORICAL]
     y = data[TARGET]
-    groups = data["tournament"]
+    groups_tournament = data["tournament"]
+    groups_match = data["match_id"]
 
     if X.isna().sum().sum() > 0:
         raise ValueError("X still contains NaN after prepare_xy().")
 
-    return X, y, groups
+    return X, y, groups_tournament, groups_match
 
 
 # ============================================================
@@ -97,14 +99,14 @@ def run_cv_with_calibration(df, feature_set, numeric_features, model_name,
 
     This avoids any information from the test split entering the calibrator.
     """
-    X, y, groups = prepare_xy(df, numeric_features)
+    X, y, groups_tournament, groups_match = prepare_xy(df, numeric_features)
 
-    if validation == "stratified_kfold":
-        splitter = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
-        split_iter = splitter.split(X, y)
+    if validation == "stratified_group_kfold":
+        splitter = StratifiedGroupKFold(n_splits=5)
+        split_iter = splitter.split(X, y, groups_match)
     elif validation == "leave_one_tournament_out":
         splitter = LeaveOneGroupOut()
-        split_iter = splitter.split(X, y, groups)
+        split_iter = splitter.split(X, y, groups_tournament)
     else:
         raise ValueError(f"Unknown validation: {validation}")
 
@@ -116,15 +118,16 @@ def run_cv_with_calibration(df, feature_set, numeric_features, model_name,
 
         X_train, X_test = X.iloc[tr], X.iloc[te]
         y_train, y_test = y.iloc[tr], y.iloc[te]
+        groups_match_train = groups_match.iloc[tr]
 
-        inner_cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=RANDOM_STATE)
+        inner_cv = StratifiedGroupKFold(n_splits=3)
 
         search = GridSearchCV(
             estimator, grid,
             scoring="average_precision",
             cv=inner_cv, n_jobs=-1, refit=True, error_score="raise",
         )
-        search.fit(X_train, y_train)
+        search.fit(X_train, y_train, groups=groups_match_train)
         best_est = search.best_estimator_
 
         # [P1] Calibrate INSIDE the fold (only on training data)
@@ -196,7 +199,7 @@ def run_lr_test_statsmodels(df):
     results = {}
     for label, numeric in [("A_classic", MODEL_A_NUMERIC),
                              ("B_360",     MODEL_B_NUMERIC)]:
-        X_num, y, _ = prepare_xy(df_no_pen, numeric)
+        X_num, y, _, _ = prepare_xy(df_no_pen, numeric)
         # One-hot encode categoricals manually (statsmodels needs numpy)
         X_cat = pd.get_dummies(df_no_pen[CATEGORICAL], drop_first=True)
         X_all = pd.concat([X_num[numeric], X_cat], axis=1).astype(float)
@@ -233,13 +236,13 @@ def run_lr_test_statsmodels(df):
 # Fit final model (for export / web app)
 # ============================================================
 def fit_final(df, feature_set, numeric_features, model_name, estimator, grid):
-    X, y, _ = prepare_xy(df, numeric_features)
-    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
+    X, y, _, groups_match = prepare_xy(df, numeric_features)
+    cv = StratifiedGroupKFold(n_splits=5)
     search = GridSearchCV(
         estimator, grid, scoring="average_precision",
         cv=cv, n_jobs=-1, refit=True, error_score="raise",
     )
-    search.fit(X, y)
+    search.fit(X, y, groups=groups_match)
     path = MODELS_DIR / f"{feature_set}_{model_name}.pkl"
     joblib.dump(search.best_estimator_, path)
     return path, search.best_params_, search.best_score_
@@ -269,7 +272,7 @@ def main():
 
     for feature_set, features in feature_sets.items():
         for model_name, (estimator, grid) in make_models(features).items():
-            for validation in ["stratified_kfold", "leave_one_tournament_out"]:
+            for validation in ["stratified_group_kfold", "leave_one_tournament_out"]:
                 result = run_cv_with_calibration(
                     df=df, feature_set=feature_set,
                     numeric_features=features, model_name=model_name,
