@@ -344,6 +344,10 @@ def extract_360_features(frames, shots_by_id):
             "visible_area_points_count_360": (
                 len(visible_area) if isinstance(visible_area, list) else 0
             ),
+
+            # Freeze-frame visibility (for 10_freeze_frame_visibility.py)
+            "n_visible_players": len(freeze),
+            "n_visible_opponents": len(opponents),
         })
 
     return rows
