@@ -6,7 +6,7 @@ Istraživanje da li StatsBomb 360 podaci o pozicijama igrača na terenu u trenut
 
 - StatsBomb open-data: SP 2022 (64 meča), EP 2020 (51), EP 2024 (51)
 - 3.968 šuteva, 372 gola (penali isključeni)
-- Puno 360 freeze-frame pokriće
+- Puno 360 freeze-frame pokrivanje
 
 ## Rezultati
 
