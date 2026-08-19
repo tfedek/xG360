@@ -148,7 +148,7 @@ def run_cv_with_calibration(df, feature_set, numeric_features, model_name,
             "validation": validation,
             "fold": fold,
             "best_params": str(search.best_params_),
-            "test_tournament": groups.iloc[te].iloc[0]
+            "test_tournament": groups_tournament.iloc[te].iloc[0]
                                if validation == "leave_one_tournament_out" else "",
         })
 
