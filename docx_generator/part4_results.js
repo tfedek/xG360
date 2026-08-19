@@ -12,14 +12,14 @@ function buildPart4() {
     p('Stopa konverzije šuteva u gol statistički se značajno razlikuje između tri turnira (H4: hi-kvadrat = 8,336; p = 0,015), pri čemu Evropsko prvenstvo 2024 ima primetno nižu stopu (7,5%) u odnosu na Svetsko prvenstvo 2022 (10,6%) i Evropsko prvenstvo 2020 (9,9%).'),
     p('Formalni Kolmogorov-Smirnov test pokazao je da se raspodela udaljenosti od gola i ugla šuta statistički ne razlikuju značajno između bilo koja dva turnira (p > 0,05 za sve parove). Ovo je ključan nalaz za tumačenje razlike u stopi konverzije: nije pronađen dokaz da se marginalne raspodele udaljenosti i ugla razlikuju, pa razlika u konverziji nije objašnjena tim dvema posmatranim geometrijskim karakteristikama. Mogući izvori razlike uključuju završnicu igrača, golmanski učinak, druge neobuhvaćene karakteristike šuta i slučajnu varijaciju.'),
 
-    h2('4.2. Performans modela: Stratified K-Fold validacija'),
-    caption('Tabela 2. Rezultati Stratified K-Fold validacije (prosek kroz 5 foldova). Brier skor prikazuje vrednost posle post-hoc kalibracije (izotona regresija unutar folda).'),
+    h2('4.2. Performans modela: StratifiedGroupKFold po meču validacija'),
+    caption('Tabela 2. Rezultati StratifiedGroupKFold po meču validacije (prosek kroz 5 foldova). Brier skor prikazuje vrednost posle post-hoc kalibracije (izotona regresija unutar folda).'),
     makeTable(
       ['Model', 'ROC AUC', 'PR AUC', 'F1', 'Brier skor'],
       [
-        ['Model A, logistička regresija', '0,754', '0,301', '0,354', '0,076'],
+        ['Model A, logistička regresija', '0,755', '0,294', '0,362', '0,076'],
         ['Model A, XGBoost', '0,744', '0,289', '0,345', '0,076'],
-        ['Model B, logistička regresija', '0,765', '0,309', '0,383', '0,075'],
+        ['Model B, logistička regresija', '0,772', '0,319', '0,379', '0,074'],
         ['Model B, XGBoost', '0,758', '0,294', '0,376', '0,076'],
       ],
       [3360, 1500, 1500, 1500, 1500]
@@ -33,20 +33,20 @@ function buildPart4() {
       [
         ['Model A, logistička regresija', '0,760', '0,301', '0,350', '0,076'],
         ['Model A, XGBoost', '0,760', '0,293', '0,354', '0,076'],
-        ['Model B, logistička regresija', '0,771', '0,319', '0,371', '0,074'],
+        ['Model B, logistička regresija', '0,777', '0,329', '0,388', '0,074'],
         ['Model B, XGBoost', '0,770', '0,310', '0,389', '0,075'],
       ],
       [3360, 1500, 1500, 1500, 1500]
     ),
-    p('Rezultati Leave-One-Tournament-Out validacije su konzistentni sa rezultatima Stratified K-Fold validacije. Razlike u ROC AUC između dve validacione šeme ne prelaze 0,02, što ukazuje da modeli ne pokazuju znake dramatične prenaučenosti specifičnostima jednog turnira, mada LOTO rezultati pokazuju nešto veću varijabilnost nego K-Fold (što je očekivano s obzirom na samo 3 turnira).'),
+    p('Rezultati Leave-One-Tournament-Out validacije su konzistentni sa rezultatima StratifiedGroupKFold po meču validacije. Razlike u ROC AUC između dve validacione šeme ne prelaze 0,02, što ukazuje da modeli ne pokazuju znake dramatične prenaučenosti specifičnostima jednog turnira, mada LOTO rezultati pokazuju nešto veću varijabilnost nego K-Fold (što je očekivano s obzirom na samo 3 turnira).'),
     p('Pri detaljnijem pregledu po pojedinačnom turniru, Evropsko prvenstvo 2024 dosledno pokazuje nešto niži PR AUC kao izostavljeni turnir u odnosu na druga dva, što je u skladu sa nalazom iz odeljka 4.1 da ovaj turnir ima nižu stopu konverzije šuteva u gol, uz statistički nepromenjenu geometriju šuta.'),
 
     h2('4.3a. Formalno testiranje statističke značajnosti razlike Model A i Model B'),
     p('Dosledna prednost Modela B u ROC AUC i PR AUC kroz obe validacione šeme jeste snažan indirektan pokazatelj, ali ne predstavlja sama po sebi formalni statistički dokaz da razlika nije slučajna. Da bi se ova razlika formalno testirala, sprovedena su dva nezavisna testa, prilagođena svakom od dva algoritma.'),
     p('Za logističku regresiju, Model A je formalno ugnježden u Model B: atributi Modela A predstavljaju tačan podskup atributa Modela B, pri čemu Model B sadrži svih 11 dodatnih StatsBomb 360 prostornih atributa navedenih u odeljku 3.4. Ugnježdena struktura modela dozvoljava primenu Likelihood Ratio (LR) testa, koji poredi logaritme verodostojnosti (log-likelihood) dva modela:'),
     F.eqLikelihoodRatio(),
-    p('gde su ℓ_A i ℓ_B logaritmi verodostojnosti Modela A i Modela B, a LR statistika prati hi-kvadrat raspodelu sa brojem stepeni slobode jednakim broju dodatnih parametara u Modelu B. Oba modela su fitovana na identičnom skupu od 3.968 šuteva (bez penala), kako bi poređenje log-likelihood vrednosti bilo validno. Rezultat je LR = 66,43, sa 11 stepeni slobode, što odgovara p-vrednosti od približno 5,79×10⁻¹⁰, odlučno odbacujući nultu hipotezu da StatsBomb 360 atributi ne doprinose modelu. Ovaj nalaz je dodatno potkrepljen i Akaikeovim informacionim kriterijumom: AIC iznosi 2.141,44 za Model A i 2.097,01 za Model B (favorizuje B). Bajesov informacioni kriterijum (BIC) iznosi 2.204,30 naspram 2.229,01 (favorizuje A, što je metodološki očekivano jer BIC strože kažnjava dodatne parametre).'),
-    p('Za poređenje modela van parametarskog okvira logističke regresije, sprovedena je bootstrap analiza razlike ROC AUC na kompletnim out-of-fold (OOF) predikcijama iz svih LOTO foldova. Pooled OOF ROC AUC iznosi 0,680 za Model A i 0,703 za Model B. Opažena razlika (Model B minus Model A) iznosi 0,024, a 95% bootstrap interval poverenja (2.000 iteracija) iznosi [0,013, 0,034]. Pošto interval ne sadrži nulu, razlika se smatra statistički značajnom na nivou alfa = 0,05. Napomena: ova pooled OOF razlika (0,024) se razlikuje od razlike u Tabeli 3 (0,011) jer Tabela 3 prikazuje neponderisani prosek AUC-ova izračunatih odvojeno po turniru, dok pooled pristup računa jedan AUC na svim šutevima zajedno.'),
+    p('gde su ℓ_A i ℓ_B logaritmi verodostojnosti Modela A i Modela B, a LR statistika prati hi-kvadrat raspodelu sa brojem stepeni slobode jednakim broju dodatnih parametara u Modelu B. Oba modela su fitovana na identičnom skupu od 3.967 šuteva (bez penala, bez 1 šuta sa uglom jednakim nuli), kako bi poređenje log-likelihood vrednosti bilo validno. Rezultat je LR = 67,98, sa 11 stepeni slobode, što odgovara p-vrednosti od približno 2,95×10⁻¹⁰, odlučno odbacujući nultu hipotezu da StatsBomb 360 atributi ne doprinose modelu. Akaikeov informacioni kriterijum: AIC iznosi 2.139,93 za Model A i 2.093,95 za Model B (favorizuje B). Bajesov informacioni kriterijum (BIC) iznosi 2.202,79 naspram 2.225,95 (favorizuje A, što je metodološki očekivano jer BIC strože kažnjava dodatne parametre).'),
+    p('Za poređenje na nivou pojedinačnih šuteva, sprovedena je bootstrap analiza razlike ROC AUC na kompletnim out-of-fold (OOF) predikcijama iz svih LOTO foldova. Pooled OOF ROC AUC iznosi 0,677 za Model A i 0,688 za Model B. Opažena razlika (Model B minus Model A) iznosi 0,010, a 95% bootstrap interval poverenja (2.000 iteracija) iznosi [-0,015, 0,037]. Interval sadrži nulu, što znači da na nivou pojedinačnog šuta razlika nije statistički značajna na alfa=0,05. Ovo je vredan nalaz koji zaslužuje transparentno prikazivanje: signal od 360 atributa je realan ali umeren. Na nivou turnira (LOTO validacija, Tabela 3), razlika je konzistentna i praktično smislena (+0,018 AUC). LR test potvrđuje da 360 atributi nose stvarnu inkrementalnu informaciju (p=2,95×10⁻¹⁰). Zaključak je da 360 atributi poboljšavaju model konzistentno kroz turnire, ali efekt na nivou pojedinačnog šuta nije toliko jak da preživi konzervativni shot-level bootstrap.'),
     p('Napomena o Likelihood Ratio testu: LR test je primenjen isključivo na neponderisanom, nepenalizovanom logističkom modelu (standardni statsmodels Logit bez class_weight i bez regularizacije), jer ponderisanje klasa menja efektivnu likelihood funkciju i narušava standardnu interpretaciju LR statistike, AIC-a i BIC-a. Prediktivni modeli (sa regularizacijom i podešavanjem hiperparametara) koriste se za Brier/AUC izveštavanje; inferencijalni model služi isključivo za formalni test značajnosti.'),
 
     h2('4.4. Kalibracija i post-hoc korekcija'),

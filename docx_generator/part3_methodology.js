@@ -58,11 +58,11 @@ function buildPart3() {
     F.eqLogit(),
     p('gde je p verovatnoća gola, a β₀, β₁, ..., βₖ koeficijenti modela procenjeni metodom maksimalne verodostojnosti. Predviđena verovatnoća se zatim dobija primenom sigmoid (logističke) funkcije na linearnu kombinaciju z:'),
     F.eqSigmoidFixed(),
-    p('Hiperparametri su podešavani metodom Randomized Search uz unutrašnju petokratnu Stratified K-Fold unakrsnu validaciju, čime je obezbeđeno da test podaci nikada nisu učestvovali u procesu podešavanja.'),
+    p('Hiperparametri su podešavani metodom Randomized Search uz unutrašnju petokratnu StratifiedGroupKFold po meču unakrsnu validaciju, čime je obezbeđeno da test podaci nikada nisu učestvovali u procesu podešavanja.'),
 
     h2('3.6. Validacija modela'),
     p('Validacija je sprovedena u dva nivoa koji odgovaraju na različita pitanja:'),
-    bullet('Stratified K-Fold (5 foldova): koliko model radi na podacima iz iste distribucije kao i podaci za treniranje.'),
+    bullet('StratifiedGroupKFold po meču (5 foldova): koliko model radi na podacima iz iste distribucije kao i podaci za treniranje.'),
     bullet('Leave-One-Tournament-Out: koliko model generalizuje na potpuno nov turnir koji nije učestvovao u treningu. Za svaki od tri turnira, model je treniran na preostala dva turnira (uključujući ponovno podešavanje hiperparametara isključivo na tom trening skupu) i testiran na izostavljenom turniru.'),
     p('Ovakav dvostepeni pristup namerno je odabran jer K-Fold i Leave-One-Tournament-Out odgovaraju na različita pitanja: prvi procenjuje performans unutar poznate distribucije, a drugi procenjuje robusnost modela na potpuno nov kontekst. Treba napomenuti da Leave-One-Tournament-Out validacija sa samo tri turnira ima ograničenu statističku snagu za procenu varijanse generalizacije, te da su Evropsko prvenstvo 2020 i Evropsko prvenstvo 2024 strukturno sličniji jedan drugom (isto takmičenje, različite edicije) nego Svetskom prvenstvu, što treba imati u vidu pri tumačenju rezultata.'),
 
