@@ -386,7 +386,7 @@
         (51 meč). 3.968 šuteva u modelovanju (penali izdvojeni deskriptivno).
       </p>
       <p style="font-size:13.5px; line-height:1.6;">
-        <strong>Metod:</strong> logistička regresija i XGBoost, sa Stratified K-Fold i Leave-One-Tournament-Out
+        <strong>Metod:</strong> logistička regresija i XGBoost, sa StratifiedGroupKFold po meču i Leave-One-Tournament-Out
         validacijom (model treniran na dva turnira, testiran na trećem - provera generalizacije kroz različita
         takmičenja). Interpretacija putem Odds Ratio i SHAP vrednosti.
       </p>
@@ -733,7 +733,7 @@ function renderEvalTables() {
   const cols = ['model','roc_auc','pr_auc','f1','brier_score'];
   const brierCols = ['model','brier_pre_kalibracije','brier_posle_kalibracije'];
   document.getElementById('roc-content').innerHTML = `
-    <p style="font-size:13px;color:var(--muted);">Stratified K-Fold (5 foldova) - prosek:</p>
+    <p style="font-size:13px;color:var(--muted);">StratifiedGroupKFold po meču (5 foldova) - prosek:</p>
     ${tbl(EVAL.kfold, cols)}${cards(EVAL.kfold, cols)}
     <p style="font-size:13px;color:var(--muted);margin-top:16px;">Leave-One-Tournament-Out - prosek:</p>
     ${tbl(EVAL.loto, cols)}${cards(EVAL.loto, cols)}
