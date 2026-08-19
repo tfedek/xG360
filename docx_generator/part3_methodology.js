@@ -84,6 +84,9 @@ function buildPart3() {
 
     h2('3.9. Diskusija'),
     p('Završni korak metodologije objedinjuje nalaze iz prethodnih koraka u celovitu diskusiju o doprinosu StatsBomb 360 atributa, generalizaciji modela kroz turnire, praktičnoj primeni nalaza i ograničenjima istraživanja, što je detaljno razrađeno u poglavlju 5.'),
+
+    h2('3.10. Dostupnost podataka i koda'),
+    p('Kompletan kod za reprodukciju svih rezultata (priprema podataka, treniranje modela, validacija, evaluacija, vizualizacija) javno je dostupan na GitHub repozitorijumu: https://github.com/tfedek/xG360. Podaci korišćeni u istraživanju dolaze iz javno dostupnog StatsBomb Open Data repozitorijuma (https://github.com/statsbomb/open-data) i mogu se slobodno preuzeti za akademska istraživanja.'),
   ];
 }
 
