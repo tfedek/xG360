@@ -82,10 +82,9 @@ function buildPart3() {
     F.eqShap(),
     p('SHAP vrednosti su izvedene iz teorije kooperativnih igara (Shapley vrednosti) i imaju svojstvo da se zbir svih doprinosa φᵢ, uz baznu vrednost φ₀, egzaktno svodi na predviđenu vrednost modela za tu konkretnu opservaciju. Analiza je sprovedena bez unapred određenih očekivanja o tome koji će atributi biti najuticajniji, kako bi se izbeglo da metodologija unapred pretpostavi rezultat. Posebna pažnja posvećena je poređenju važnosti atributa između Modela A i Modela B, jer to poređenje direktno pokazuje kako se uticaj klasičnih atributa menja kada se dodaju prostorni podaci.'),
 
-    h2('3.9. Diskusija'),
     p('Završni korak metodologije objedinjuje nalaze iz prethodnih koraka u celovitu diskusiju o doprinosu StatsBomb 360 atributa, generalizaciji modela kroz turnire, praktičnoj primeni nalaza i ograničenjima istraživanja, što je detaljno razrađeno u poglavlju 5.'),
 
-    h2('3.10. Dostupnost podataka i koda'),
+    h2('3.9. Dostupnost podataka i koda'),
     p('Kompletan kod za reprodukciju svih rezultata (priprema podataka, treniranje modela, validacija, evaluacija, vizualizacija) javno je dostupan na GitHub repozitorijumu: https://github.com/tfedek/xG360. Podaci korišćeni u istraživanju dolaze iz javno dostupnog StatsBomb Open Data repozitorijuma (https://github.com/statsbomb/open-data) i mogu se slobodno preuzeti za akademska istraživanja.'),
   ];
 }
