@@ -18,9 +18,9 @@ function buildPart4() {
       ['Model', 'ROC AUC', 'PR AUC', 'F1', 'Brier skor'],
       [
         ['Model A, logistička regresija', '0,755', '0,294', '0,362', '0,076'],
-        ['Model A, XGBoost', '0,744', '0,289', '0,345', '0,076'],
+        ['Model A, XGBoost', '0,753', '0,301', '0,359', '0,076'],
         ['Model B, logistička regresija', '0,772', '0,319', '0,379', '0,074'],
-        ['Model B, XGBoost', '0,758', '0,294', '0,376', '0,076'],
+        ['Model B, XGBoost', '0,758', '0,290', '0,365', '0,076'],
       ],
       [3360, 1500, 1500, 1500, 1500]
     ),
@@ -31,10 +31,10 @@ function buildPart4() {
     makeTable(
       ['Model', 'ROC AUC', 'PR AUC', 'F1', 'Brier skor'],
       [
-        ['Model A, logistička regresija', '0,760', '0,301', '0,350', '0,076'],
-        ['Model A, XGBoost', '0,760', '0,293', '0,354', '0,076'],
+        ['Model A, logistička regresija', '0,759', '0,299', '0,346', '0,076'],
+        ['Model A, XGBoost', '0,756', '0,290', '0,352', '0,076'],
         ['Model B, logistička regresija', '0,777', '0,329', '0,388', '0,074'],
-        ['Model B, XGBoost', '0,770', '0,310', '0,389', '0,075'],
+        ['Model B, XGBoost', '0,770', '0,310', '0,394', '0,075'],
       ],
       [3360, 1500, 1500, 1500, 1500]
     ),
@@ -54,14 +54,14 @@ function buildPart4() {
     makeTable(
       ['Model', 'Brier skor (sirovi model)', 'Brier skor (posle kalibracije)'],
       [
-        ['Model A, logistička regresija', '0,155', '0,076'],
-        ['Model A, XGBoost', '0,107', '0,076'],
-        ['Model B, logistička regresija', '0,147', '0,074'],
-        ['Model B, XGBoost', '0,121', '0,075'],
+        ['Model A, logistička regresija', '0,146', '0,076'],
+        ['Model A, XGBoost', '0,095', '0,076'],
+        ['Model B, logistička regresija', '0,139', '0,074'],
+        ['Model B, XGBoost', '0,091', '0,076'],
       ],
       [4500, 2430, 2430]
     ),
-    p('Sirovi modeli, pre post-hoc kalibracije, pokazuju sistematsku prekalibrisanost u višem opsegu predviđenih verovatnoća. Primena izotone regresije kao post-hoc kalibracije značajno poboljšava Brier skor za sve četiri kombinacije modela (redukcije od 29% do 51% u zavisnosti od modela i validacione šeme).'),
+    p('Sirovi modeli, pre post-hoc kalibracije, pokazuju sistematsku prekalibrisanost u višem opsegu predviđenih verovatnoća. Primena izotone regresije kao post-hoc kalibracije značajno poboljšava Brier skor za sve četiri kombinacije modela (redukcije od 16% do 48% u zavisnosti od modela i validacione šeme).'),
 
     h2('4.5. Ablation analiza: doprinos pojedinačnih grupa 360 atributa'),
     p('Da bi se preciziralo koji deo prostorne informacije proizvodi poboljšanje, sprovedena je ablation analiza u kojoj su 360 atributi podeljeni u pet grupa: golman (GK - udaljenost golmana), konusni branioci (CONE - branioci u konusu šuta i između šutera i gola), defanzivni pritisak (PRESSURE - pressure_score, broj branilaca u blizini), linija šuta (SHOT_LINE - najbliži branilac liniji šuter-gol), i otvorenost ugla (OPEN_ANGLE - open_angle_ratio_360). Za svaku grupu treniran je Model A sa jednom dodatom grupom, i merena je LOTO AUC razlika u odnosu na čist Model A.'),
@@ -72,13 +72,13 @@ function buildPart4() {
         ['Model A (bez 360)', '0,760', '-'],
         ['Model A + OPEN_ANGLE', '0,760', '+0,000'],
         ['Model A + SHOT_LINE', '0,760', '+0,000'],
-        ['Model A + GK', '0,764', '+0,004'],
+        ['Model A + GK', '0,765', '+0,004'],
         ['Model A + PRESSURE', '0,767', '+0,007'],
-        ['Model A + CONE', '0,768', '+0,008'],
-        ['Model B (sve 360 grupe)', '0,772', '+0,012'],
+        ['Model A + CONE', '0,768', '+0,007'],
+        ['Model B (sve 360 grupe)', '0,773', '+0,013'],
       ]
     ),
-    p('Rezultati pokazuju da CONE daje najveće poboljšanje kada se pojedinačno doda Modelu A (+0,008), zatim PRESSURE (+0,007) i GK (+0,004). OPEN_ANGLE i SHOT_LINE ne donose merljiv doprinos kad se dodaju samostalno. Ovo ne meri jedinstveni doprinos svake grupe u punom modelu (jer su 360 atributi međusobno korelisani), već performans grupe kada se izoluje i doda baseline-u. Otvorenost ugla nije pokazala samostalan inkrementalni doprinos; njen eventualni doprinos u punom modelu može biti posledica redundancije sa drugim prostornim atributima. Napomena: ROC AUC za pun Model B u Tabeli 5 (0,772) blago se razlikuje od vrednosti u Tabeli 3 (0,771) jer ablation koristi logističku regresiju bez GridSearchCV.'),
+    p('Rezultati pokazuju da CONE daje najveće poboljšanje kada se pojedinačno doda Modelu A (+0,007), zatim PRESSURE (+0,007) i GK (+0,004). OPEN_ANGLE i SHOT_LINE ne donose merljiv doprinos kad se dodaju samostalno. Ovo ne meri jedinstveni doprinos svake grupe u punom modelu (jer su 360 atributi međusobno korelisani), već performans grupe kada se izoluje i doda baseline-u. Otvorenost ugla nije pokazala samostalan inkrementalni doprinos; njen eventualni doprinos u punom modelu može biti posledica redundancije sa drugim prostornim atributima. Napomena: ROC AUC za pun Model B u Tabeli 5 (0,773) blago se razlikuje od vrednosti u Tabeli 3 (0,777) jer ablation koristi logističku regresiju bez GridSearchCV.'),
 
     h2('4.6. Interpretacija modela: Odds Ratio i SHAP'),
     p('Logistička regresija na Modelu B pokazuje statistički značajan Odds Ratio za ključne atribute: veća udaljenost od gola asocirana je sa nižim odds-om gola, veći ugao šuta asociran je sa višim odds-om, šut glavom ima značajno niži Odds Ratio u odnosu na šut nogom, što je u skladu sa nalazima iz literature o nižoj stopi konverzije udaraca glavom.'),
