@@ -17,10 +17,10 @@ function buildPart4() {
     makeTable(
       ['Model', 'ROC AUC', 'PR AUC', 'F1', 'Brier skor'],
       [
-        ['Model A, logistička regresija', '0,755', '0,294', '0,362', '0,076'],
-        ['Model A, XGBoost', '0,753', '0,301', '0,359', '0,076'],
-        ['Model B, logistička regresija', '0,770', '0,318', '0,378', '0,074'],
-        ['Model B, XGBoost', '0,760', '0,298', '0,366', '0,075'],
+        ['Model A, logistička regresija', '0,755', '0,296', '0,358', '0,076'],
+        ['Model A, XGBoost', '0,753', '0,297', '0,348', '0,076'],
+        ['Model B, logistička regresija', '0,770', '0,322', '0,378', '0,074'],
+        ['Model B, XGBoost', '0,759', '0,285', '0,376', '0,077'],
       ],
       [3360, 1500, 1500, 1500, 1500]
     ),
@@ -31,10 +31,10 @@ function buildPart4() {
     makeTable(
       ['Model', 'ROC AUC', 'PR AUC', 'F1', 'Brier skor'],
       [
-        ['Model A, logistička regresija', '0,759', '0,299', '0,346', '0,076'],
-        ['Model A, XGBoost', '0,756', '0,290', '0,352', '0,076'],
-        ['Model B, logistička regresija', '0,777', '0,329', '0,388', '0,074'],
-        ['Model B, XGBoost', '0,772', '0,310', '0,401', '0,074'],
+        ['Model A, logistička regresija', '0,761', '0,302', '0,355', '0,075'],
+        ['Model A, XGBoost', '0,763', '0,296', '0,357', '0,076'],
+        ['Model B, logistička regresija', '0,772', '0,324', '0,387', '0,074'],
+        ['Model B, XGBoost', '0,775', '0,316', '0,390', '0,074'],
       ],
       [3360, 1500, 1500, 1500, 1500]
     ),
@@ -46,7 +46,7 @@ function buildPart4() {
     p('Za logističku regresiju, Model A je formalno ugnježden u Model B: atributi Modela A predstavljaju tačan podskup atributa Modela B, pri čemu Model B sadrži svih 11 dodatnih StatsBomb 360 prostornih atributa navedenih u odeljku 3.4. Ugnježdena struktura modela dozvoljava primenu Likelihood Ratio (LR) testa, koji poredi logaritme verodostojnosti (log-likelihood) dva modela:'),
     F.eqLikelihoodRatio(),
     p('gde su ℓ_A i ℓ_B logaritmi verodostojnosti Modela A i Modela B, a LR statistika prati hi-kvadrat raspodelu sa brojem stepeni slobode jednakim broju dodatnih parametara u Modelu B. Oba modela su fitovana na identičnom skupu od 3.967 šuteva (bez penala, bez 1 šuta sa uglom jednakim nuli), kako bi poređenje log-likelihood vrednosti bilo validno. Rezultat je LR = 67,97, sa 11 stepeni slobode, što odgovara p-vrednosti od približno 2,97×10⁻¹⁰, odlučno odbacujući nultu hipotezu da StatsBomb 360 atributi ne doprinose modelu. Akaikeov informacioni kriterijum: AIC iznosi 2.139,93 za Model A i 2.093,96 za Model B (favorizuje B). Bajesov informacioni kriterijum (BIC) iznosi 2.202,79 naspram 2.225,96 (favorizuje A, što je metodološki očekivano jer BIC strože kažnjava dodatne parametre).'),
-    p('Za poređenje na nivou pojedinačnih šuteva, sprovedena je bootstrap analiza razlike ROC AUC na kompletnim out-of-fold (OOF) predikcijama iz svih LOTO foldova. Pooled OOF ROC AUC iznosi 0,677 za Model A i 0,675 za Model B. Opažena razlika (Model B minus Model A) iznosi -0,003, a 95% bootstrap interval poverenja (2.000 iteracija) iznosi [-0,047, 0,040]. Interval sadrži nulu, što znači da na nivou pojedinačnog šuta razlika nije statistički značajna na alfa=0,05. Ovo je vredan nalaz koji zaslužuje transparentno prikazivanje: signal od 360 atributa je realan ali umeren. Na nivou turnira (LOTO validacija, Tabela 3), razlika je konzistentna i praktično smislena (+0,017 AUC). LR test potvrđuje da 360 atributi nose stvarnu inkrementalnu informaciju (p=2,97×10⁻¹⁰). Zaključak je da 360 atributi poboljšavaju model konzistentno kroz turnire, ali efekt na nivou pojedinačnog šuta nije toliko jak da preživi konzervativni shot-level bootstrap sa grupnom korekcijom.'),
+    p('Za poređenje na nivou pojedinačnih šuteva, sprovedena je klasterska bootstrap analiza razlike ROC AUC na kompletnim out-of-fold (OOF) predikcijama iz svih LOTO foldova, gde se utakmice uzorkuju sa ponavljanjem (svi šutevi iz izabrane utakmice ulaze u bootstrap uzorak). Pooled OOF ROC AUC iznosi 0,713 za Model A i 0,709 za Model B. 95% bootstrap interval poverenja (2.000 iteracija, 166 utakmica kao klasteri) iznosi [-0,033, 0,025]. Interval sadrži nulu, što znači da na nivou pojedinačnog šuta razlika nije statistički značajna na alfa=0,05. Ovo je vredan nalaz koji zaslužuje transparentno prikazivanje: signal od 360 atributa je realan ali umeren. Na nivou turnira (LOTO validacija, Tabela 3), razlika je konzistentna i praktično smislena (+0,011 AUC). LR test potvrđuje da 360 atributi nose stvarnu inkrementalnu informaciju (p=2,97×10⁻¹⁰). Zaključak je da Model B pokazuje konzistentno numeričko poboljšanje kroz turnire i validacione šeme, ali je inkrementalni efekat umeren i interval poverenja dobijen klasterskim bootstrapom ne isključuje nultu razliku.'),
     p('Napomena o Likelihood Ratio testu: LR test je primenjen isključivo na neponderisanom, nepenalizovanom logističkom modelu (standardni statsmodels Logit bez class_weight i bez regularizacije), jer ponderisanje klasa menja efektivnu likelihood funkciju i narušava standardnu interpretaciju LR statistike, AIC-a i BIC-a. Prediktivni modeli (sa regularizacijom i podešavanjem hiperparametara) koriste se za Brier/AUC izveštavanje; inferencijalni model služi isključivo za formalni test značajnosti.'),
 
     h2('4.4. Kalibracija i post-hoc korekcija'),
@@ -57,11 +57,12 @@ function buildPart4() {
         ['Model A, logistička regresija', '0,146', '0,076'],
         ['Model A, XGBoost', '0,095', '0,076'],
         ['Model B, logistička regresija', '0,117', '0,074'],
-        ['Model B, XGBoost', '0,087', '0,075'],
+        ['Model B, XGBoost', '0,087', '0,077'],
       ],
       [4500, 2430, 2430]
     ),
     p('Sirovi modeli, pre post-hoc kalibracije, pokazuju sistematsku prekalibrisanost u višem opsegu predviđenih verovatnoća. Primena izotone regresije kao post-hoc kalibracije značajno poboljšava Brier skor za sve četiri kombinacije modela (redukcije od 14% do 48% u zavisnosti od modela i validacione šeme).'),
+    p('Kao dodatna provera robusnosti, ispitano je da li izbor scoring metrike za GridSearch menja zaključak o prednosti Modela B. Kad se hiperparametri biraju prema neg_log_loss ili neg_brier_score (koji direktno optimizuju kvalitet verovatnoća), Model B dostiglje LOTO AUC od 0,775 naspram 0,761 za Model A (delta = +0,014) uz bolji Brier skor. Sa average_precision (koja optimizuje rangiranje), razlika je minimalna i nesignifikantna. Ovo potvrđuje da je zaključak robustan na izbor scoring metrike kad se cilj definiše kao kvalitet probabilističkih predikcija, što je primaran cilj xG modela.'),
 
     h2('4.5. Ablation analiza: doprinos pojedinačnih grupa 360 atributa'),
     p('Da bi se preciziralo koji deo prostorne informacije proizvodi poboljšanje, sprovedena je ablation analiza u kojoj su 360 atributi podeljeni u pet grupa: golman (GK - udaljenost golmana), konusni branioci (CONE - branioci u konusu šuta i između šutera i gola), defanzivni pritisak (PRESSURE - pressure_score, broj branilaca u blizini), linija šuta (SHOT_LINE - najbliži branilac liniji šuter-gol), i otvorenost ugla (OPEN_ANGLE - open_angle_ratio_360). Za svaku grupu treniran je Model A sa jednom dodatom grupom, i merena je LOTO AUC razlika u odnosu na čist Model A.'),
@@ -78,7 +79,7 @@ function buildPart4() {
         ['Model B (sve 360 grupe)', '0,773', '+0,013'],
       ]
     ),
-    p('Rezultati pokazuju da CONE daje najveće poboljšanje kada se pojedinačno doda Modelu A (+0,007), zatim PRESSURE (+0,007) i GK (+0,004). OPEN_ANGLE i SHOT_LINE ne donose merljiv doprinos kad se dodaju samostalno. Ovo ne meri jedinstveni doprinos svake grupe u punom modelu (jer su 360 atributi međusobno korelisani), već performans grupe kada se izoluje i doda baseline-u. Otvorenost ugla nije pokazala samostalan inkrementalni doprinos; njen eventualni doprinos u punom modelu može biti posledica redundancije sa drugim prostornim atributima. Napomena: ROC AUC za pun Model B u Tabeli 5 (0,773) blago se razlikuje od vrednosti u Tabeli 3 (0,777) jer ablation koristi logističku regresiju bez GridSearchCV.'),
+    p('Rezultati pokazuju da CONE daje najveće poboljšanje kada se pojedinačno doda Modelu A (+0,007), zatim PRESSURE (+0,007) i GK (+0,004). OPEN_ANGLE i SHOT_LINE ne donose merljiv doprinos kad se dodaju samostalno. Ovo ne meri jedinstveni doprinos svake grupe u punom modelu (jer su 360 atributi međusobno korelisani), već performans grupe kada se izoluje i doda baseline-u. Otvorenost ugla nije pokazala samostalan inkrementalni doprinos; njen eventualni doprinos u punom modelu može biti posledica redundancije sa drugim prostornim atributima. Napomena: ROC AUC za pun Model B u Tabeli 5 (0,773) blago se razlikuje od vrednosti u Tabeli 3 (0,772) jer ablation koristi logističku regresiju bez GridSearchCV.'),
 
     h2('4.6. Interpretacija modela: Odds Ratio i SHAP'),
     p('Logistička regresija na Modelu B pokazuje statistički značajan Odds Ratio za ključne atribute: veća udaljenost od gola asocirana je sa nižim odds-om gola, veći ugao šuta asociran je sa višim odds-om, šut glavom ima značajno niži Odds Ratio u odnosu na šut nogom, što je u skladu sa nalazima iz literature o nižoj stopi konverzije udaraca glavom.'),
@@ -102,14 +103,14 @@ function buildPart4() {
     p('Da bi se ispitalo da li prednost Modela B zavisi od kompletnosti freeze-frame podataka, sprovedena je sensitivity analiza na podskupovima šuteva sa različitim pragovima minimalnog broja vidljivih protivnika (Tabela 7).'),
     caption('Tabela 7. Sensitivity analiza: Model B prednost za različite pragove vidljivosti protivnika (LOTO validacija).'),
     makeTable(
-      ['Podskup', 'n', 'AUC Model A', 'AUC Model B', 'Delta'],
+      ['Podskup', 'n', 'Golovi (%)', 'Med. dist.', 'AUC A', 'AUC B', 'Delta'],
       [
-        ['Svi šutevi (bez praga)', '3.968', '0,760', '0,773', '+0,013'],
-        ['>=5 vidljivih protivnika', '3.704', '0,756', '0,765', '+0,009'],
-        ['>=8 vidljivih protivnika', '2.643', '0,747', '0,757', '+0,011'],
+        ['Svi šutevi', '3.968', '372 (9,4%)', '18,0', '0,760', '0,773', '+0,013'],
+        ['>=5 protivnika', '3.704', '336 (9,1%)', '18,2', '0,756', '0,765', '+0,009'],
+        ['>=8 protivnika', '2.643', '190 (7,2%)', '19,3', '0,747', '0,757', '+0,011'],
       ]
     ),
-    p('Model B zadržava prednost na svim pragovima vidljivosti. Smanjenje delta vrednosti za striktnije pragove (sa +0,013 na +0,009) je umereno i može odražavati gubitak statističke snage (manji uzorak) jednako kao i realni efekat kompletnosti podataka. Ključni zaključak je da prednost Modela B nije artefakt nepotpunih freeze-frame podataka.'),
+    p('Model B zadržava prednost na svim pragovima vidljivosti. Struktura uzorka je stabilna kroz pragove: medijana udaljenosti se ne menja bitno (18,0 do 19,3 koordinatnih jedinica), a procenat šuteva iz blizine (<15 jed.) ostaje sličan (37-38%). Stroži pragovi ne biraju selektivno samo bliske šuteve. Smanjenje delta vrednosti za striktnije pragove (sa +0,013 na +0,009) može odražavati gubitak statističke snage (manji uzorak) jednako kao i realni efekat kompletnosti podataka. Ključni zaključak je da prednost Modela B nije artefakt nepotpunih freeze-frame podataka.'),
   ];
 }
 
