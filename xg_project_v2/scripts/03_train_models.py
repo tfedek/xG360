@@ -196,6 +196,12 @@ def run_lr_test_statsmodels(df):
     else:
         df_no_pen = df.copy()
 
+    # Isključi šuteve sa angle=0 — uzrokuju kvazi-savršenu separaciju
+    # u nepenalizovanom Logit-u (2 šuta, edge case gde je ugao jednak nuli)
+    n_before = len(df_no_pen)
+    df_no_pen = df_no_pen[df_no_pen["angle"] > 0].copy()
+    print(f"  Šutevi sa angle=0 isključeni: {n_before - len(df_no_pen)}. n={len(df_no_pen)}")
+
     results = {}
     for label, numeric in [("A_classic", MODEL_A_NUMERIC),
                              ("B_360",     MODEL_B_NUMERIC)]:
