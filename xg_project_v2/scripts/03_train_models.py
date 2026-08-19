@@ -62,13 +62,10 @@ def prepare_xy(df, numeric_features):
     for col in numeric_features:
         data[col] = pd.to_numeric(data[col], errors="coerce")
         data[col] = data[col].replace([np.inf, -np.inf], np.nan)
-        median_value = data[col].median()
-        if pd.isna(median_value):
-            median_value = 0
-        data[col] = data[col].fillna(median_value)
+        # NaN left intentionally — SimpleImputer in pipeline handles per-fold
 
     for col in CATEGORICAL:
-        data[col] = data[col].fillna("Unknown").astype(str)
+        data[col] = data[col].astype(str)  # NaN -> "nan", pipeline imputer handles
 
     data[TARGET] = data[TARGET].astype(int)
     data["tournament"] = data["tournament"].astype(str)
@@ -78,9 +75,6 @@ def prepare_xy(df, numeric_features):
     y = data[TARGET]
     groups_tournament = data["tournament"]
     groups_match = data["match_id"]
-
-    if X.isna().sum().sum() > 0:
-        raise ValueError("X still contains NaN after prepare_xy().")
 
     return X, y, groups_tournament, groups_match
 
@@ -131,8 +125,19 @@ def run_cv_with_calibration(df, feature_set, numeric_features, model_name,
         best_est = search.best_estimator_
 
         # [P1] Calibrate INSIDE the fold (only on training data)
+        # Use StratifiedGroupKFold for calibration to prevent match-level leakage
+        cal_cv = StratifiedGroupKFold(n_splits=3)
+        cal_folds = list(cal_cv.split(X_train, y_train, groups_match_train))
+
+        # Assert: no match_id leakage within calibration folds
+        for cal_tr, cal_te in cal_folds:
+            train_matches = set(groups_match_train.iloc[cal_tr])
+            test_matches = set(groups_match_train.iloc[cal_te])
+            assert train_matches.isdisjoint(test_matches), \
+                "Match ID leakage in calibration folds!"
+
         calibrated = CalibratedClassifierCV(
-            estimator=best_est, method="isotonic", cv=3
+            estimator=best_est, method="isotonic", cv=cal_folds
         )
         calibrated.fit(X_train, y_train)
 

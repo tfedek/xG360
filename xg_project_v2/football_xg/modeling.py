@@ -3,6 +3,7 @@ import pandas as pd
 
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
@@ -53,10 +54,18 @@ def load_modeling_data(path):
 
 
 def make_preprocessor(numeric_features):
+    num_pipeline = Pipeline([
+        ("imputer", SimpleImputer(strategy="median")),
+        ("scaler", StandardScaler()),
+    ])
+    cat_pipeline = Pipeline([
+        ("imputer", SimpleImputer(strategy="constant", fill_value="Unknown")),
+        ("encoder", OneHotEncoder(handle_unknown="ignore")),
+    ])
     return ColumnTransformer(
         transformers=[
-            ("num", StandardScaler(), numeric_features),
-            ("cat", OneHotEncoder(handle_unknown="ignore"), CATEGORICAL),
+            ("num", num_pipeline, numeric_features),
+            ("cat", cat_pipeline, CATEGORICAL),
         ]
     )
 

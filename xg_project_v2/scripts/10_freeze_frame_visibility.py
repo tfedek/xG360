@@ -137,21 +137,42 @@ def sensitivity_analysis(df):
             print(f"  {label}: premalo podataka ({len(subset)} suteva), preskoceno.")
             continue
 
+        n_shots = len(subset)
+        n_goals = int(subset[TARGET].sum())
+        goal_rate = n_goals / n_shots
+        median_distance = subset["distance"].median() if "distance" in subset.columns else np.nan
+
         auc_a = loto_auc(subset, MODEL_A_NUMERIC)
         auc_b = loto_auc(subset, MODEL_B_NUMERIC)
 
         row = {
-            "subset": label, "n_shots": len(subset),
+            "subset": label, "n_shots": n_shots,
+            "n_goals": n_goals, "goal_rate": round(goal_rate, 4),
+            "median_distance": round(median_distance, 2),
             "auc_a": round(auc_a, 4), "auc_b": round(auc_b, 4),
             "delta": round(auc_b - auc_a, 4),
         }
         rows.append(row)
-        print(f"  {label}: n={len(subset)}, AUC_A={auc_a:.4f}, "
-              f"AUC_B={auc_b:.4f}, delta={auc_b-auc_a:+.4f}")
+        print(f"  {label}: n={n_shots}, goals={n_goals} ({goal_rate:.1%}), "
+              f"med_dist={median_distance:.1f}, "
+              f"AUC_A={auc_a:.4f}, AUC_B={auc_b:.4f}, delta={auc_b-auc_a:+.4f}")
 
     result = pd.DataFrame(rows)
     result.to_csv(OUT_DIR / "visibility_sensitivity.csv", index=False)
     print(f"\nSaved: {OUT_DIR / 'visibility_sensitivity.csv'}")
+
+    # Structure check: do stricter thresholds bias toward close-range shots?
+    print("\n  Struktura uzorka po pragovima:")
+    for label, min_opp in thresholds:
+        if min_opp is not None:
+            subset = df[df["n_visible_opponents"] >= min_opp]
+        else:
+            subset = df
+        if "distance" in subset.columns:
+            pct_close = (subset["distance"] < 15).mean()
+            print(f"    {label}: {len(subset)} suteva, "
+                  f"median dist={subset['distance'].median():.1f}, "
+                  f"% blizu (<15)={pct_close:.1%}")
 
 
 def main():
