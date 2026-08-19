@@ -4,6 +4,12 @@ web/data/shots.json
 web/data/freeze_frames.json
 web/data/results.txt
 
+# Pipeline data (raw = large StatsBomb JSON, outputs/models = regenerable)
+xg_project_v2/data/raw/
+xg_project_v2/data/outputs/
+xg_project_v2/data/models/
+xg_project_v2/data/processed/
+
 # Node
 node_modules/
 
