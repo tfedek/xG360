@@ -84,6 +84,32 @@ function buildPart4() {
     p('Logistička regresija na Modelu B pokazuje statistički značajan Odds Ratio za ključne atribute: veća udaljenost od gola asocirana je sa nižim odds-om gola, veći ugao šuta asociran je sa višim odds-om, šut glavom ima značajno niži Odds Ratio u odnosu na šut nogom, što je u skladu sa nalazima iz literature o nižoj stopi konverzije udaraca glavom.'),
     p('SHAP analiza na Modelu B (XGBoost) pokazuje da je ugao šuta najuticajniji prediktor u fitovanom modelu, neposredno praćen udaljenošću golmana (goalkeeper_distance_360), koja se plasira kao najuticajniji 360 atribut. Otvorenost ugla ka golu (open_angle_ratio_360) rangira se tek na 14. mestu; nije pokazala samostalan inkrementalni doprinos u ablation analizi, a eventualna vrednost u punom modelu može odražavati redundanciju sa drugim prostornim atributima. Ovo je nalaz o prediktivnoj asocijaciji, ne o uzročnom efektu.'),
     p('Zanimljiv je nesklad između dva pristupa interpretaciji za atribut najbliže udaljenosti branioca od linije šuta: u logističkoj regresiji ovaj atribut nije statistički značajan (p = 0,645), dok se u SHAP analizi XGBoost modela plasira na petom mestu po uticaju. Ovaj nesklad može ukazivati na nelinearnost ili interakcije koje logistički model ne hvata, ali sam po sebi ne identifikuje uzrok nesklada (mogući faktori uključuju i korelaciju sa drugim feature-ima i razlike u regularizaciji između dva modela).'),
+
+    h2('4.7. Analiza kompletnosti freeze-frame podataka'),
+    p('StatsBomb 360 freeze-frame ne garantuje vidljivost svih 22 igrača na terenu. Broj vidljivih igrača po šutu varira zavisno od ugla kamere i okluzije. Tabela 6 prikazuje deskriptivnu statistiku broja vidljivih igrača i vidljivih protivnika po turniru.'),
+    caption('Tabela 6. Deskriptivna statistika broja vidljivih igrača u freeze-frame podacima po turniru.'),
+    makeTable(
+      ['Turnir', 'Vidljivi igrači (median)', 'IQR', 'Vidljivi protivnici (median)', 'IQR'],
+      [
+        ['FIFA World Cup 2022', '15', '13-18', '8', '7-9'],
+        ['UEFA Euro 2020', '15', '12-17', '8', '7-9'],
+        ['UEFA Euro 2024', '16', '14-18', '9', '7-10'],
+      ]
+    ),
+    p('Medijana broja vidljivih igrača iznosi 15 (ukupni raspon 4-22), dok medijana vidljivih protivnika iznosi 8 (raspon 2-11). UEFA Euro 2024 pokazuje blago veći broj vidljivih igrača, što može odražavati poboljšanje u freeze-frame pokrivanju.'),
+    p('[SLIKA: visibility_distribution.png]', {noIndent: true}),
+    caption('Slika 3. Distribucija broja vidljivih igrača i protivnika po turniru.'),
+    p('Da bi se ispitalo da li prednost Modela B zavisi od kompletnosti freeze-frame podataka, sprovedena je sensitivity analiza na podskupovima šuteva sa različitim pragovima minimalnog broja vidljivih protivnika (Tabela 7).'),
+    caption('Tabela 7. Sensitivity analiza: Model B prednost za različite pragove vidljivosti protivnika (LOTO validacija).'),
+    makeTable(
+      ['Podskup', 'n', 'AUC Model A', 'AUC Model B', 'Delta'],
+      [
+        ['Svi šutevi (bez praga)', '3.968', '0,760', '0,773', '+0,013'],
+        ['>=5 vidljivih protivnika', '3.704', '0,756', '0,765', '+0,009'],
+        ['>=8 vidljivih protivnika', '2.643', '0,747', '0,757', '+0,011'],
+      ]
+    ),
+    p('Model B zadržava prednost na svim pragovima vidljivosti. Smanjenje delta vrednosti za striktnije pragove (sa +0,013 na +0,009) je umereno i može odražavati gubitak statističke snage (manji uzorak) jednako kao i realni efekat kompletnosti podataka. Ključni zaključak je da prednost Modela B nije artefakt nepotpunih freeze-frame podataka.'),
   ];
 }
 
