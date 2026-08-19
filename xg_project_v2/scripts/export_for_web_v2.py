@@ -13,7 +13,8 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from football_xg.config import (
     DATASET_PATH, MODEL_A_NUMERIC, MODEL_B_NUMERIC, CATEGORICAL, TARGET,
-    RAW_DIR, THREE_SIXTY_DIR, EVENTS_DIR
+    RAW_DIR, THREE_SIXTY_DIR, EVENTS_DIR, MODELS_DIR,
+    OUTPUT_DIR as PIPELINE_OUTPUT_DIR
 )
 from football_xg.data_utils import load_json
 
@@ -26,8 +27,8 @@ def main():
     print(f"  {len(df)} shots, {df[TARGET].sum()} goals")
 
     print("Loading v2 models...")
-    model_a = joblib.load(Path.home() / "data/models/model_a_classic_logistic.pkl")
-    model_b = joblib.load(Path.home() / "data/models/model_b_360_v3_logistic.pkl")
+    model_a = joblib.load(MODELS_DIR / "model_a_classic_logistic.pkl")
+    model_b = joblib.load(MODELS_DIR / "model_b_360_v3_logistic.pkl")
 
     # Predictions for all shots
     feats_a = MODEL_A_NUMERIC + CATEGORICAL
@@ -147,7 +148,7 @@ def main():
 
     # Export evaluation_summary.json
     print("Exporting evaluation_summary.json...")
-    cv_results = pd.read_csv(Path.home() / "data/outputs/model_training/cv_results_all_v2.csv")
+    cv_results = pd.read_csv(PIPELINE_OUTPUT_DIR / "model_training/cv_results_all_v2.csv")
     
     eval_out = {"kfold": [], "loto": [], "brier_calibration": []}
     
@@ -181,7 +182,7 @@ def main():
     print("Exporting shap_importance.json...")
     try:
         import shap
-        xgb_b = joblib.load(Path.home() / "data/models/model_b_360_v3_xgboost.pkl")
+        xgb_b = joblib.load(MODELS_DIR / "model_b_360_v3_xgboost.pkl")
         X_b = df[feats_b].copy()
         # Transform through prep step
         X_b_transformed = xgb_b.named_steps["prep"].transform(X_b)
