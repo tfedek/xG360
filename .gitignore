@@ -18,6 +18,11 @@ node_modules/
 *.swp
 *~
 
+# Build artifacts / temp
+web.zip
+~$*.docx
+.venv/
+
 # Python
 __pycache__/
 *.pyc

@@ -1,0 +1,2 @@
+opazena_razlika_AUC_B_minus_A,ci_lo_95,ci_hi_95,p_approx,bootstrap_iteracija,resampling_jedinica,predikcije
+0.022687902777029922,0.009563023616083924,0.03583990998204383,0.002,2000,match_id,"out-of-fold (StratifiedGroupKFold, grupe=match_id)"
