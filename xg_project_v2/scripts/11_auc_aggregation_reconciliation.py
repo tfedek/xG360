@@ -1,7 +1,7 @@
 """
 11_auc_aggregation_reconciliation.py
 ====================================
-Odgovor na recenziju (prof. Pap), tacka 2:
+Usklađivanje AUC vrednosti (tačka 2):
 
 Objasniti razliku AUC = 0,772 (Tabela 3, macro-average LOTO ROC AUC po
 turniru) i pooled OOF AUC = 0,709/0,713 (poglavlje o klasterskom bootstrapu),

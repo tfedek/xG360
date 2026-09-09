@@ -120,7 +120,7 @@ def main():
     ci_lo, ci_hi = np.percentile(boot_diffs, [2.5, 97.5])
     p_approx = 2 * min(np.mean(boot_diffs <= 0), np.mean(boot_diffs >= 0))
 
-    print(f"\n[P5] Cluster bootstrap CI (n_boot={len(boot_diffs)}/{N_BOOT}, skipped={skipped}):")
+    print(f"\nCluster bootstrap CI (n_boot={len(boot_diffs)}/{N_BOOT}, skipped={skipped}):")
     print(f"  Observed diff: {observed_diff:.4f}")
     print(f"  Mean boot diff: {boot_diffs.mean():.4f}")
     print(f"  95% CI: [{ci_lo:.4f}, {ci_hi:.4f}]")

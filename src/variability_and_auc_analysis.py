@@ -1,7 +1,7 @@
 """
-professor_revisions.py
-======================
-Dopune tražene u recenziji (prof. Pap):
+variability_and_auc_analysis.py
+===============================
+Dopunske analize varijabilnosti i agregacije AUC vrednosti:
 
 (1) Varijabilnost u tabelama:
     - Stratified (Group) K-Fold: prosek +/- SD preko 5 foldova
@@ -185,7 +185,7 @@ def paired_cluster_bootstrap(y, prob_a, prob_b, match_id, n_boot=2000):
 
 def main():
     print("=" * 78)
-    print("DOPUNE PO RECENZIJI - varijabilnost, pooled OOF AUC, parni bootstrap")
+    print("DOPUNSKE ANALIZE - varijabilnost, pooled OOF AUC, parni bootstrap")
     print("=" * 78)
 
     # --- Učitavanje (LR varijante za glavnu analizu, kako u radu) ---

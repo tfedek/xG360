@@ -1,16 +1,16 @@
 """
-03_train_models.py  –  revision v2 (professor review)
+03_train_models.py  -  verzija v2
 ========================================================
 Changes vs. v1:
-  [P1] Isotonic calibration now fitted INSIDE each CV fold on the
+  Isotonic calibration now fitted INSIDE each CV fold on the
        training split → calibrated Brier reported on the held-out fold
        (no calibration leakage from test data).
-  [P2] class_weight is part of the hyperparameter grid, so its
+  class_weight is part of the hyperparameter grid, so its
        interaction with calibration is handled per fold.
-  [P3] goalkeeper_anomaly residuals would be fitted here if used;
+  goalkeeper_anomaly residuals would be fitted here if used;
        in current feature set this is handled upstream in
        02_build_dataset.py → no leakage from global fit.
-  [P6] A separate UNPENALIZED, UNWEIGHTED logistic regression
+  A separate UNPENALIZED, UNWEIGHTED logistic regression
        (statsmodels Logit, full dataset) is used for the formal
        Likelihood Ratio test, AIC and BIC. This is methodologically
        correct: regularised / class-weighted sklearn models break
@@ -62,7 +62,7 @@ def prepare_xy(df, numeric_features):
     for col in numeric_features:
         data[col] = pd.to_numeric(data[col], errors="coerce")
         data[col] = data[col].replace([np.inf, -np.inf], np.nan)
-        # NaN left intentionally — SimpleImputer in pipeline handles per-fold
+        # NaN left intentionally - SimpleImputer in pipeline handles per-fold
 
     for col in CATEGORICAL:
         data[col] = data[col].astype(str)  # NaN -> "nan", pipeline imputer handles
@@ -80,7 +80,7 @@ def prepare_xy(df, numeric_features):
 
 
 # ============================================================
-# [P1] CV with in-fold isotonic calibration
+# CV with in-fold isotonic calibration
 # ============================================================
 def run_cv_with_calibration(df, feature_set, numeric_features, model_name,
                              estimator, grid, validation):
@@ -124,7 +124,7 @@ def run_cv_with_calibration(df, feature_set, numeric_features, model_name,
         search.fit(X_train, y_train, groups=groups_match_train)
         best_est = search.best_estimator_
 
-        # [P1] Calibrate INSIDE the fold (only on training data)
+        # Calibrate INSIDE the fold (only on training data)
         # Use StratifiedGroupKFold for calibration to prevent match-level leakage
         cal_cv = StratifiedGroupKFold(n_splits=3)
         cal_folds = list(cal_cv.split(X_train, y_train, groups_match_train))
@@ -175,8 +175,8 @@ def run_cv_with_calibration(df, feature_set, numeric_features, model_name,
 
 
 # ============================================================
-# [P6] Formal LR test: UNPENALIZED, UNWEIGHTED statsmodels Logit
-#      Used ONLY for AIC/BIC/LR-test — NOT for Brier/AUC reporting
+# Formal LR test: UNPENALIZED, UNWEIGHTED statsmodels Logit
+#      Used ONLY for AIC/BIC/LR-test - NOT for Brier/AUC reporting
 # ============================================================
 def run_lr_test_statsmodels(df):
     """
@@ -186,12 +186,12 @@ def run_lr_test_statsmodels(df):
       Model B: classic + 360 features
     Then runs the Likelihood Ratio test (B nested in A).
 
-    [P6] Using statsmodels without regularisation / class_weight so that
+    Using statsmodels without regularisation / class_weight so that
     AIC, BIC, and the chi-square p-value are statistically valid.
     """
-    print("\n[P6] Formal LR test (unpenalized statsmodels Logit) ...")
+    print("\nFormal LR test (unpenalized statsmodels Logit) ...")
 
-    # [P6+FIX] Isključi penale iz LR testa — shot_type_Penalty uzrokuje
+    # Isključi penale iz LR testa - shot_type_Penalty uzrokuje
     # kvazi-savršenu separaciju u Model B i dovodi do llf=-inf.
     # Ovo je konzistentno sa sklearn CV koji ih isključuje kroz CATEGORICAL
     # one-hot encoding (ali tamo class_weight/regularizacija sprečava divergenciju).
@@ -201,7 +201,7 @@ def run_lr_test_statsmodels(df):
     else:
         df_no_pen = df.copy()
 
-    # Isključi šuteve sa angle=0 — uzrokuju kvazi-savršenu separaciju
+    # Isključi šuteve sa angle=0 - uzrokuju kvazi-savršenu separaciju
     # u nepenalizovanom Logit-u (2 šuta, edge case gde je ugao jednak nuli)
     n_before = len(df_no_pen)
     df_no_pen = df_no_pen[df_no_pen["angle"] > 0].copy()
@@ -273,7 +273,7 @@ def main():
     df = load_modeling_data(DATASET_PATH)
     print(f"Rows (ukupno, sa penalima): {len(df)} | Goals: {df[TARGET].sum()} ({df[TARGET].mean():.3f})")
 
-    # Isključi penale iz svih modela — konzistentno sa originalnim pipeline-om.
+    # Isključi penale iz svih modela - konzistentno sa originalnim pipeline-om.
     # Penali nemaju 360 podatke (osim blokiranih), fiksne su geometrije, i
     # uvode kvazi-savršenu separaciju u nepenalizovanom LR testu.
     if "shot_type" in df.columns:
@@ -316,7 +316,7 @@ def main():
     results.to_csv(out_dir / "cv_results_all_v2.csv", index=False)
     pd.DataFrame(final_rows).to_csv(out_dir / "final_models.csv", index=False)
 
-    # [P6] Formal LR test (unpenalized)
+    # Formal LR test (unpenalized)
     lr_results = run_lr_test_statsmodels(df)
     pd.DataFrame([lr_results]).to_csv(out_dir / "lr_test_results_v2.csv", index=False)
 

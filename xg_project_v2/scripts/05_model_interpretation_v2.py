@@ -1,12 +1,12 @@
 """
-05_model_interpretation_v2.py  –  revision v2 (professor review)
+05_model_interpretation_v2.py  -  verzija v2
 ==================================================================
 Changes vs. v1:
-  [P7] Cluster-robust standard errors (clustered by match_id) added to
+  Cluster-robust standard errors (clustered by match_id) added to
        the unpenalized statsmodels Logit, as a sensitivity check.
        This accounts for the fact that shots within the same match are
        not independent (shared game context, fatigue, tactics).
-  [P9] Language in printed output uses "association" / "predictive
+  Language in printed output uses "association" / "predictive
        contribution" rather than "causal" or strong causal language.
        The final paragraph in the Word document should mirror this.
 """
@@ -33,20 +33,20 @@ ensure_dirs(OUT_DIR)
 
 def logistic_odds_ratios_with_cluster_se():
     """
-    [P7] Fits unpenalized statsmodels Logit on Model B features and
+    Fits unpenalized statsmodels Logit on Model B features and
     computes BOTH:
       (a) standard sandwich (HC3) standard errors
       (b) cluster-robust standard errors (clustered by match_id)
     as a sensitivity check for the within-match non-independence.
 
-    [P9] Outputs are labelled as "predictive association", not causal.
+    Outputs are labelled as "predictive association", not causal.
     """
     df = load_modeling_data(DATASET_PATH)
 
-    # Need match_id for clustering — load from raw CSV
+    # Need match_id for clustering - load from raw CSV
     raw = pd.read_csv(DATASET_PATH)
     if "match_id" not in raw.columns:
-        print("  [P7] match_id column not found; skipping cluster-robust SE.")
+        print("  match_id column not found; skipping cluster-robust SE.")
         cluster_groups = None
     else:
         cluster_groups = raw["match_id"].astype(str)
@@ -73,7 +73,7 @@ def logistic_odds_ratios_with_cluster_se():
         "p_value_std": model.pvalues.values,
     })
 
-    # [P7] Cluster-robust SEs
+    # Cluster-robust SEs
     if cluster_groups is not None:
         robust_fit = sm.Logit(y, X).fit(
             cov_type="cluster",
@@ -85,15 +85,15 @@ def logistic_odds_ratios_with_cluster_se():
         out_std["ci_low_cluster_robust"] = np.exp(ci_rob.iloc[:, 0])
         out_std["ci_high_cluster_robust"] = np.exp(ci_rob.iloc[:, 1])
 
-        print("\n[P7] Cluster-robust vs. standard p-values (top features by standard p):")
+        print("\nCluster-robust vs. standard p-values (top features by standard p):")
         compare = out_std[["feature", "p_value_std", "p_value_cluster_robust"]].sort_values("p_value_std").head(15)
         print(compare.to_string(index=False))
 
     out_std = out_std.sort_values("p_value_std")
     out_std.to_csv(OUT_DIR / "logistic_odds_ratios_model_b_v2.csv", index=False)
 
-    # [P9] Print with careful language
-    print("\n[P9] Predictive associations (Model B, unpenalized logistic, odds ratios):")
+    # Print with careful language
+    print("\nPredictive associations (Model B, unpenalized logistic, odds ratios):")
     print("     Note: these reflect statistical association in the fitted model,")
     print("     not causal effects.")
     print(out_std[["feature", "odds_ratio", "p_value_std"]].head(20).to_string(index=False))
@@ -120,12 +120,12 @@ def model_feature_importance():
     plt.figure(figsize=(9, 7))
     top = out.head(25).iloc[::-1]
     plt.barh(top["feature"], top["importance"])
-    plt.title("XGBoost Feature Importance – Model B\n(predictive contribution, not causal)")
+    plt.title("XGBoost Feature Importance - Model B\n(predictive contribution, not causal)")
     plt.tight_layout()
     plt.savefig(OUT_DIR / "xgboost_feature_importance_model_b_v2.png", dpi=180)
     plt.close()
 
-    print("\n[P9] XGBoost feature importances (predictive contribution):")
+    print("\nXGBoost feature importances (predictive contribution):")
     print(out.head(20).to_string(index=False))
 
 

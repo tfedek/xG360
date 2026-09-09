@@ -1,5 +1,5 @@
 """
-10_freeze_frame_visibility.py  -  NEW (professor review, visibility limitation)
+10_freeze_frame_visibility.py  -  analiza vidljivosti freeze-frame podataka
 =================================================================================
 Analyzes the completeness of StatsBomb 360 freeze-frame data:
   - Number of visible players per freeze-frame

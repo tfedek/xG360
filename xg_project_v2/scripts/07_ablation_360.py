@@ -1,5 +1,5 @@
 """
-07_ablation_360.py  –  NEW (professor review, point P4)
+07_ablation_360.py  -  ablation analiza doprinosa grupa 360 atributa
 =========================================================
 Ablation study: which 360 features contribute most to Model B's
 advantage over Model A?

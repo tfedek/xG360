@@ -1,5 +1,5 @@
 """
-09_spatial_feature_documentation.py  –  NEW (professor review, point P8)
+09_spatial_feature_documentation.py  -  dokumentacija konstrukcije 360 atributa
 =========================================================================
 Documents the spatial (360) feature construction with:
   1. A freeze-frame example visualization (one shot, showing all
@@ -8,9 +8,8 @@ Documents the spatial (360) feature construction with:
      (default: 10 m, constant 0.5)
   3. A pseudocode block printed to stdout (for inclusion in paper appendix)
 
-[P8] Per reviewer: "The open_goal_angle_ratio and pressure_score
-construction should be validated through a freeze-frame example
-and sensitivity analysis."
+Konstrukcija atributa open_goal_angle_ratio i pressure_score validira se
+kroz primer freeze-frame kadra i analizu osetljivosti na parametre.
 """
 
 import warnings
@@ -39,10 +38,10 @@ PSEUDOCODE = """
 PSEUDOCODE: Spatial (360) Feature Construction
 ================================================
 
-INPUT: freeze_frame  — list of {actor_position: (x, y), actor: {teammate: bool}}
-       shot_location — (x_s, y_s)
-       goal_center   — (120.0, 40.0)
-       goal_posts    — left: (120.0, 36.34), right: (120.0, 43.66)
+INPUT: freeze_frame  - list of {actor_position: (x, y), actor: {teammate: bool}}
+       shot_location - (x_s, y_s)
+       goal_center   - (120.0, 40.0)
+       goal_posts    - left: (120.0, 36.34), right: (120.0, 43.66)
 
 --- open_goal_angle_ratio ---
   total_angle = angle subtended by goalposts from shot_location
@@ -66,7 +65,7 @@ INPUT: freeze_frame  — list of {actor_position: (x, y), actor: {teammate: bool
       perp_distance = perpendicular distance from opponent to shot_line
   nearest_defender_to_shot_line = min(perp_distance)
 
-OUTPUT: open_goal_angle_ratio  (float, 0–1)
+OUTPUT: open_goal_angle_ratio  (float, 0-1)
         pressure_score         (float, ≥0)
         nearest_defender_to_shot_line (float, meters)
 """
@@ -113,7 +112,7 @@ sensitivity_df.to_csv(OUT_DIR / "pressure_score_sensitivity.csv", index=False)
 
 # Pivot for display
 pivot = sensitivity_df.pivot(index="radius_m", columns="epsilon", values="pressure_score")
-print("\n[P8] pressure_score sensitivity (rows=radius, cols=epsilon):")
+print("\npressure_score sensitivity (rows=radius, cols=epsilon):")
 print(pivot.to_string())
 
 fig, ax = plt.subplots(figsize=(7, 4))
@@ -123,7 +122,7 @@ for eps in epsilons:
 ax.axvline(x=10, linestyle="--", color="gray", label="default radius=10m")
 ax.set_xlabel("Radius (m)")
 ax.set_ylabel("pressure_score")
-ax.set_title("[P8] pressure_score sensitivity to radius and epsilon")
+ax.set_title("pressure_score sensitivity to radius and epsilon")
 ax.legend(fontsize=8)
 plt.tight_layout()
 plt.savefig(OUT_DIR / "pressure_score_sensitivity.png", dpi=160)
@@ -136,7 +135,7 @@ print(f"Saved: {OUT_DIR / 'pressure_score_sensitivity.png'}")
 # ============================================================
 # Fabricate a representative freeze frame (real freeze frames
 # would require loading from the StatsBomb raw JSON, which is
-# not included in the portable package — this example uses
+# not included in the portable package - this example uses
 # synthetic but geometrically plausible positions)
 
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -184,10 +183,10 @@ ax.plot([sx, GOAL_X], [sy, LEFT_POST_Y], "w-", linewidth=1, alpha=0.5)
 ax.plot([sx, GOAL_X], [sy, RIGHT_POST_Y], "w-", linewidth=1, alpha=0.5)
 
 ax.legend(loc="upper left", fontsize=8, framealpha=0.7)
-ax.set_title("[P8] Freeze-frame example: spatial feature illustration\n"
+ax.set_title("Freeze-frame example: spatial feature illustration\n"
               "(synthetic positions, geometrically representative)")
-ax.set_xlabel("x (StatsBomb, 0–120)")
-ax.set_ylabel("y (StatsBomb, 0–80)")
+ax.set_xlabel("x (StatsBomb, 0-120)")
+ax.set_ylabel("y (StatsBomb, 0-80)")
 plt.tight_layout()
 plt.savefig(OUT_DIR / "freeze_frame_example.png", dpi=180)
 plt.close()
